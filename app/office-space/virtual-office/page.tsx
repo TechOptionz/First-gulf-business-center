@@ -37,7 +37,7 @@ export default function VirtualOfficePage() {
       <section className="relative py-16 sm:py-24 bg-charcoal-950 text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/virtual-office.jpg"
+            src="/images/virtual-office.webp"
             alt="Virtual Office and EJARI Services in Dubai"
             fill
             priority

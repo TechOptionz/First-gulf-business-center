@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     siteName: "First Gulf Business Center",
     images: [
       {
-        url: "/images/hero-dubai-office.jpg",
+        url: "/images/hero-dubai-office.webp",
         width: 1200,
         height: 630,
         alt: "First Gulf Business Center Dubai",
@@ -78,7 +78,7 @@ export default function RootLayout({
     "@type": "LocalBusiness",
     name: COMPANY_DETAILS.legalName,
     alternateName: "First Gulf Business Center",
-    image: "https://firstgulfbusiness.ae/images/hero-dubai-office.jpg",
+    image: "https://firstgulfbusiness.ae/images/hero-dubai-office.webp",
     logo: "https://firstgulfbusiness.ae/logo.png",
     "@id": "https://firstgulfbusiness.ae/#organization",
     url: "https://firstgulfbusiness.ae",

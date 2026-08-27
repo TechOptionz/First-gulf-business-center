@@ -155,7 +155,7 @@ export default function AboutPage() {
             <div className="lg:col-span-6">
               <div className="relative rounded-sm overflow-hidden border-2 border-brass-300 shadow-luxury aspect-[4/3] bg-charcoal-900">
                 <Image
-                  src="/images/hero-dubai-office.jpg"
+                  src="/images/hero-dubai-office.webp"
                   alt="First Gulf Business Center Office Suite Interior"
                   fill
                   className="object-cover"

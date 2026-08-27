@@ -35,7 +35,7 @@ export default function OfficeSpacePage() {
       <section className="relative py-16 sm:py-24 bg-charcoal-950 text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/hero-dubai-office.jpg"
+            src="/images/hero-dubai-office.webp"
             alt="First Gulf Business Center Office Space Dubai"
             fill
             priority

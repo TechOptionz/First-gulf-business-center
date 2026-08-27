@@ -38,7 +38,7 @@ export default function FreezoneOfficePage() {
       <section className="relative py-16 sm:py-24 bg-charcoal-950 text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/freezone-office.jpg"
+            src="/images/freezone-office.webp"
             alt="Serviced Freezone Office Spaces in Dubai"
             fill
             priority

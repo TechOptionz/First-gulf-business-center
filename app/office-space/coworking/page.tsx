@@ -37,7 +37,7 @@ export default function CoworkingPage() {
       <section className="relative py-16 sm:py-24 bg-charcoal-950 text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/coworking-desk.jpg"
+            src="/images/coworking-desk.webp"
             alt="Coworking Space at First Gulf Business Center Dubai"
             fill
             priority

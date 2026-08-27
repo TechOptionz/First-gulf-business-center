@@ -106,7 +106,7 @@ export const WORKSPACE_SERVICES = [
     tagline: "Productive, Flexible & Community-Driven Workspaces",
     shortDesc: "Cost-controlled, amenity-laden shared office environments designed for freelancers, remote teams, and growing startups in Dubai.",
     href: "/office-space/coworking",
-    image: "/images/coworking-desk.jpg",
+    image: "/images/coworking-desk.webp",
     features: [
       "Hourly, daily, weekly & monthly flexible terms",
       "Choice of open Hot Desks or Reserved Dedicated Desks",
@@ -124,7 +124,7 @@ export const WORKSPACE_SERVICES = [
     tagline: "Government-Approved Business Address & Legal Compliance",
     shortDesc: "RERA-certified EJARI and DED Estidama sustainable lease agreements ensuring quick trade license issuance and employee visa processing.",
     href: "/office-space/virtual-office",
-    image: "/images/virtual-office.jpg",
+    image: "/images/virtual-office.webp",
     features: [
       "Official EJARI registration certificate for DED licensing",
       "Estidama sustainable virtual lease compliance",
@@ -142,7 +142,7 @@ export const WORKSPACE_SERVICES = [
     tagline: "Move-In Ready Serviced Executive Suites",
     shortDesc: "Fully furnished private offices providing 100% foreign ownership, tax benefits, zero trade barriers, and state-of-the-art tech infrastructure.",
     href: "/office-space/freezone",
-    image: "/images/freezone-office.jpg",
+    image: "/images/freezone-office.webp",
     features: [
       "100% foreign company ownership & 0% personal tax environment",
       "Ready-to-occupy fully furnished executive offices",
@@ -163,7 +163,7 @@ export const CONSULTANCY_SERVICES = [
     tagline: "End-to-End UAE Company Formation & Government Relations",
     shortDesc: "Navigating UAE business regulations with zero hassle. We handle Mainland DED licensing, Free Zone jurisdictions, Offshore entities, and ministerial PRO clearances.",
     href: "/business-consultancy/business-setup-pro",
-    image: "/images/business-setup.jpg",
+    image: "/images/business-setup.webp",
     offerings: [
       "Renewal & registration of commercial, professional & industrial trade licenses",
       "Investor, partner & employee visa applications, medical, Emirates ID & cancellations",
@@ -180,7 +180,7 @@ export const CONSULTANCY_SERVICES = [
     tagline: "Holistic Office Administration & Enterprise IT Management",
     shortDesc: "Tailored management and operational support packages that keep your Dubai business running efficiently 24 hours a day, 7 days a week.",
     href: "/business-consultancy/corporate-solutions",
-    image: "/images/corporate-solutions.jpg",
+    image: "/images/corporate-solutions.webp",
     offerings: [
       "Customizable office administration & facility management",
       "24/7 on-site & remote IT troubleshooting and infrastructure support",
@@ -196,7 +196,7 @@ export const CONSULTANCY_SERVICES = [
     tagline: "Intellectual Property Protection & Brand Security Across the UAE",
     shortDesc: "Safeguard your brand name, logo, slogans, and intellectual property against counterfeiting and unauthorized commercial exploitation in the Middle East.",
     href: "/business-consultancy/trademark-registration",
-    image: "/images/trademark.jpg",
+    image: "/images/trademark.webp",
     offerings: [
       "Comprehensive pre-filing UAE trademark search & conflict analysis",
       "Preparation & submission of Ministry of Economy (MoE) IP applications",

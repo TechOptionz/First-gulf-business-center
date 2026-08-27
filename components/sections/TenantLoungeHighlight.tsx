@@ -24,7 +24,7 @@ export default function TenantLoungeHighlight() {
                 <ParallaxImage offset={20}>
                   <div className="relative aspect-[16/10] w-full">
                     <Image
-                      src="/images/tenant-lounge-pool.jpg"
+                      src="/images/tenant-lounge-pool.webp"
                       alt="Exclusive Tenant Wellbeing Lounge with Pool Table at First Gulf Business Center Dubai"
                       fill
                       className="object-cover object-center"
