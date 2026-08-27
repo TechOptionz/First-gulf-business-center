@@ -20,26 +20,41 @@ export default function ImageReveal({
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
-      setIsMobile(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 1024);
+      setIsMobile(
+        window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 1024
+      );
     }
   }, []);
 
-  if (shouldReduceMotion || isMobile) {
-    return <div className={cn("overflow-hidden relative w-full h-full", className)}>{children}</div>;
+  if (shouldReduceMotion) {
+    return (
+      <div className={cn("overflow-hidden relative w-full h-full", className)}>
+        {children}
+      </div>
+    );
   }
 
   return (
     <div className={cn("overflow-hidden relative", className)}>
       <motion.div
-        initial={{ opacity: 0.9 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-40px" }}
+        initial={{ opacity: 0, scale: isMobile ? 1.06 : 1.12 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-60px" }}
         transition={{
-          duration: 0.6,
-          delay,
-          ease: "easeOut",
+          opacity: {
+            duration: isMobile ? 0.45 : 0.6,
+            delay,
+            ease: "easeOut",
+          },
+          scale: {
+            duration: isMobile ? 0.7 : 1.1,
+            delay,
+            ease: [0.16, 1, 0.3, 1] as const,
+          },
         }}
-        className="w-full h-full"
+        /* `relative` keeps this the containing block for `fill` images so the
+           settle actually scales the photo rather than the empty wrapper. */
+        className="relative w-full h-full"
       >
         {children}
       </motion.div>

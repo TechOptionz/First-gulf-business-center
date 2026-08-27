@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
+import ImageReveal from "@/components/motion/ImageReveal";
 import { CheckCircle2, Shield, Users, Award, MapPin, Building2, Coffee, Sparkles, ArrowRight } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -40,7 +41,8 @@ export default function AboutPage() {
           <FadeUp delay={0.1} distance={15}>
             <Breadcrumbs
               items={[{ name: "About Us" }]}
-              className="mb-6 text-cream-200"
+              onDark
+              className="mb-6"
             />
           </FadeUp>
 
@@ -154,13 +156,15 @@ export default function AboutPage() {
 
             <div className="lg:col-span-6">
               <div className="relative rounded-sm overflow-hidden border-2 border-brass-300 shadow-luxury aspect-[4/3] bg-charcoal-900">
-                <Image
-                  src="/images/hero-dubai-office.webp"
-                  alt="First Gulf Business Center Office Suite Interior"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
+                <ImageReveal className="w-full h-full">
+                  <Image
+                    src="/images/hero-dubai-office.webp"
+                    alt="First Gulf Business Center Office Suite Interior"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                </ImageReveal>
               </div>
             </div>
           </div>

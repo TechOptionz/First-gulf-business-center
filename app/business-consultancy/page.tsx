@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
+import ImageReveal from "@/components/motion/ImageReveal";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Shield, Briefcase, Award, Layers, Globe2, Building } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
@@ -97,13 +98,15 @@ export default function BusinessConsultancyPage() {
               >
                 <div>
                   <div className="relative h-48 w-full rounded-sm overflow-hidden mb-6 border border-cream-300">
-                    <Image
-                      src={service.image}
-                      alt={service.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
+                    <ImageReveal className="w-full h-full">
+                      <Image
+                        src={service.image}
+                        alt={service.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    </ImageReveal>
                   </div>
 
                   <span className="text-xs font-bold text-maroon-800 uppercase tracking-widest block mb-1">

@@ -39,7 +39,8 @@ export default function ContactPage() {
           <FadeUp delay={0.1} distance={15}>
             <Breadcrumbs
               items={[{ name: "Contact Us" }]}
-              className="mb-6 text-cream-200"
+              onDark
+              className="mb-6"
             />
           </FadeUp>
 

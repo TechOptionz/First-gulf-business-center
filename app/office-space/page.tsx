@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
+import ImageReveal from "@/components/motion/ImageReveal";
 import Link from "next/link";
 import { ArrowRight, Check, Sparkles, Building2, ShieldCheck, Briefcase } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
@@ -103,13 +104,15 @@ export default function OfficeSpacePage() {
                 >
                   <div className={`lg:col-span-6 ${isEven ? "lg:order-2" : ""}`}>
                     <div className="relative aspect-[16/10] w-full rounded-sm overflow-hidden border border-brass-300 shadow-md">
-                      <Image
-                        src={workspace.image}
-                        alt={workspace.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 1024px) 100vw, 50vw"
-                      />
+                      <ImageReveal className="w-full h-full">
+                        <Image
+                          src={workspace.image}
+                          alt={workspace.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                        />
+                      </ImageReveal>
                     </div>
                   </div>
 

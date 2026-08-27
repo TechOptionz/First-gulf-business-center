@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect, useMemo } from "react";
 import {
   MessageCircle,
   Phone,
@@ -14,6 +14,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { COMPANY_DETAILS, FAQS } from "@/data/content";
+import ScrollToTop from "@/components/ui/ScrollToTop";
 
 interface ChatMessage {
   id: string;
@@ -40,6 +41,9 @@ const ALL_QUESTIONS = [
   "Can you register my trademark in the UAE?",
 ];
 
+// Gap kept above the pinned question when the thread auto-scrolls.
+const PIN_OFFSET = 12;
+
 export default function FloatingContact() {
   const [isOpen, setIsOpen] = useState(false);
   const [inputQuery, setInputQuery] = useState("");
@@ -61,7 +65,17 @@ export default function FloatingContact() {
 
   const [messages, setMessages] = useState<ChatMessage[]>([initialMessage]);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [tailSpacer, setTailSpacer] = useState(0);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement | null>(null);
+
+  // The question we keep pinned to the top of the thread.
+  const lastUserMessageId = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      if (messages[i].sender === "user") return messages[i].id;
+    }
+    return null;
+  }, [messages]);
 
   useEffect(() => {
     const checkNavState = () => {
@@ -79,26 +93,57 @@ export default function FloatingContact() {
     return () => observer.disconnect();
   }, []);
 
-  const scrollToBottom = () => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-    }
-  };
-
+  // Lock the page behind the chat on mobile only.
   useEffect(() => {
-    if (isOpen) {
-      const timer = setTimeout(scrollToBottom, 60);
-      if (typeof window !== "undefined" && window.innerWidth < 640) {
-        document.body.style.overflow = "hidden";
-      }
-      return () => clearTimeout(timer);
-    } else {
-      document.body.style.overflow = "";
+    if (typeof window === "undefined") return;
+
+    if (isOpen && window.innerWidth < 640) {
+      document.body.style.overflow = "hidden";
     }
+
     return () => {
       document.body.style.overflow = "";
     };
-  }, [messages, isOpen, isTyping]);
+  }, [isOpen]);
+
+  // Instead of slamming the scroll to the very bottom (which pushed the user's
+  // question and the top of the answer out of view behind the suggestion list),
+  // park the newest question just under the top edge and let the answer read
+  // downwards from there.
+  useLayoutEffect(() => {
+    const container = chatContainerRef.current;
+    if (!isOpen || !container) return;
+
+    const anchor = anchorRef.current;
+
+    // Nothing asked yet - show the welcome message from its start.
+    if (!anchor) {
+      if (tailSpacer !== 0) setTailSpacer(0);
+      container.scrollTop = 0;
+      return;
+    }
+
+    const anchorOffset = Math.round(
+      container.scrollTop +
+        anchor.getBoundingClientRect().top -
+        container.getBoundingClientRect().top
+    );
+
+    // Everything from the question downwards (answer, suggestions, typing dots).
+    const tailHeight = container.scrollHeight - tailSpacer - anchorOffset;
+    const neededSpacer = Math.max(0, container.clientHeight - tailHeight - PIN_OFFSET);
+
+    // Short answers need filler below so the question can still reach the top.
+    if (neededSpacer !== tailSpacer) {
+      setTailSpacer(neededSpacer);
+      return; // re-runs once the spacer has been laid out
+    }
+
+    const top = Math.max(0, anchorOffset - PIN_OFFSET);
+    if (Math.abs(container.scrollTop - top) < 2) return;
+
+    container.scrollTo({ top, behavior: "smooth" });
+  }, [messages, isTyping, isOpen, tailSpacer]);
 
   // Contextually smart follow-up topic branching
   const getFollowUpSuggestions = (asked: string): string[] => {
@@ -300,10 +345,14 @@ export default function FloatingContact() {
           {/* Chat Conversation Scroll Area */}
           <div
             ref={chatContainerRef}
-            className="flex-1 p-4 overflow-y-auto space-y-4 bg-cream-50/50"
+            className="flex-1 p-4 overflow-y-auto overscroll-contain space-y-4 bg-cream-50/50"
           >
             {messages.map((msg) => (
-              <div key={msg.id} className="space-y-2">
+              <div
+                key={msg.id}
+                ref={msg.id === lastUserMessageId ? anchorRef : undefined}
+                className="space-y-2"
+              >
                 <div
                   className={`flex gap-2.5 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
                 >
@@ -377,6 +426,9 @@ export default function FloatingContact() {
                 </div>
               </div>
             )}
+
+            {/* Filler so the newest question can always be pinned to the top */}
+            <div aria-hidden style={{ height: tailSpacer }} className="shrink-0" />
           </div>
 
           {/* Message Input Box */}
@@ -405,6 +457,9 @@ export default function FloatingContact() {
           </form>
         </div>
       )}
+
+      {/* Back-to-top: stacks above the trigger, hidden while the chat is open */}
+      {!isOpen && <ScrollToTop />}
 
       {/* Visible Trigger Button (Lower Right) */}
       <button

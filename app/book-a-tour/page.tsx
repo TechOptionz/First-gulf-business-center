@@ -38,7 +38,8 @@ export default function BookTourPage() {
           <FadeUp delay={0.1} distance={15}>
             <Breadcrumbs
               items={[{ name: "Book a Tour" }]}
-              className="mb-6 text-cream-200"
+              onDark
+              className="mb-6"
             />
           </FadeUp>
 

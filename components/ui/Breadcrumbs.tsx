@@ -11,22 +11,34 @@ export interface BreadcrumbItem {
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
   className?: string;
+  /** Set on dark hero backgrounds so the trail renders in light text. */
+  onDark?: boolean;
 }
 
-export default function Breadcrumbs({ items, className }: BreadcrumbsProps) {
+export default function Breadcrumbs({
+  items,
+  className,
+  onDark = false,
+}: BreadcrumbsProps) {
   return (
     <nav
       aria-label="Breadcrumbs"
       className={cn(
-        "flex flex-wrap items-center space-x-2 gap-y-1.5 text-xs sm:text-sm font-semibold text-charcoal-700 py-2.5 sm:py-3",
+        "flex flex-wrap items-center space-x-2 gap-y-1.5 text-xs sm:text-sm font-semibold py-2.5 sm:py-3",
+        onDark ? "text-cream-200" : "text-charcoal-700",
         className
       )}
     >
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 hover:text-maroon-800 transition-colors"
+        className={cn(
+          "inline-flex items-center gap-1.5 transition-colors",
+          onDark ? "hover:text-white" : "hover:text-maroon-800"
+        )}
       >
-        <Home className="w-4 h-4 text-brass-600" />
+        <Home
+          className={cn("w-4 h-4", onDark ? "text-brass-300" : "text-brass-600")}
+        />
         <span>Home</span>
       </Link>
 
@@ -35,15 +47,29 @@ export default function Breadcrumbs({ items, className }: BreadcrumbsProps) {
 
         return (
           <React.Fragment key={index}>
-            <ChevronRight className="w-4 h-4 text-brass-500 shrink-0" />
+            <ChevronRight
+              className={cn(
+                "w-4 h-4 shrink-0",
+                onDark ? "text-brass-300" : "text-brass-500"
+              )}
+            />
             {isLast || !item.href ? (
-              <span className="text-maroon-900 font-bold truncate">
+              <span
+                aria-current="page"
+                className={cn(
+                  "font-bold truncate",
+                  onDark ? "text-white" : "text-maroon-900"
+                )}
+              >
                 {item.name}
               </span>
             ) : (
               <Link
                 href={item.href}
-                className="hover:text-maroon-800 transition-colors truncate"
+                className={cn(
+                  "transition-colors truncate",
+                  onDark ? "hover:text-white" : "hover:text-maroon-800"
+                )}
               >
                 {item.name}
               </Link>
