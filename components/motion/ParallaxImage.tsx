@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useIsMobileViewport } from "@/lib/use-media-query";
 
 interface ParallaxImageProps {
   children: React.ReactNode;
@@ -16,14 +17,9 @@ export default function ParallaxImage({
   className = "",
 }: ParallaxImageProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobileViewport();
   const shouldReduceMotion = useReducedMotion();
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsMobile(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768);
-    }
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: ref,

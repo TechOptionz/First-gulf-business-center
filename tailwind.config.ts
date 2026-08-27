@@ -1,6 +1,12 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  // Wraps every `hover:` utility in `@media (hover: hover)`, so tapping a card
+  // on a phone triggers its pressed state instead of leaving it stuck in the
+  // hover lift.
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",

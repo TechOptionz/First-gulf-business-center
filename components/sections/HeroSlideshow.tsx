@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useIsCompactViewport } from "@/lib/use-media-query";
 
 const HERO_SLIDES = [
   {
@@ -36,7 +37,7 @@ export default function HeroSlideshow() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isInView, setIsInView] = useState(true);
   const [isTabVisible, setIsTabVisible] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsCompactViewport();
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
@@ -48,11 +49,6 @@ export default function HeroSlideshow() {
     setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsMobile(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 1024);
-    }
-  }, []);
 
   // IntersectionObserver: Pause when slideshow is outside viewport
   useEffect(() => {
@@ -91,7 +87,10 @@ export default function HeroSlideshow() {
   }, [nextSlide, shouldReduceMotion, isInView, isTabVisible]);
 
   // Touch Swipe Gesture Handler
-  const handleDragEnd = (_: any, info: { offset: { x: number } }) => {
+  const handleDragEnd = (
+    _event: MouseEvent | TouchEvent | PointerEvent,
+    info: { offset: { x: number } }
+  ) => {
     if (info.offset.x < -40) {
       nextSlide();
     } else if (info.offset.x > 40) {

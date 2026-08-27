@@ -1,10 +1,11 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Sparkles, Calendar, Phone, CheckCircle, ShieldCheck, MapPin } from "lucide-react";
+import { Sparkles, Phone, CheckCircle, ShieldCheck, MapPin } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
+import Card, { CardTitle, CardText } from "@/components/ui/Card";
+import FeatureCard from "@/components/ui/FeatureCard";
+import { cardGridClass } from "@/components/ui/CardGrid";
 import TextReveal from "@/components/motion/TextReveal";
 import FadeUp from "@/components/motion/FadeUp";
 import BookTourForm from "@/components/forms/BookTourForm";
@@ -16,6 +17,13 @@ export const metadata: Metadata = {
   description:
     "Schedule a private walkthrough of First Gulf Business Center in Madina Mall, Dubai. Inspect luxury serviced offices, coworking desks, and meeting rooms.",
 };
+
+const TOUR_INCLUSIONS = [
+  "Walkthrough of private cabins, hot desks & meeting rooms",
+  "Direct consultation on DED EJARI virtual office contracts",
+  "Complimentary trial day-pass in our coworking zone",
+  "Barista coffee & access to our pool & lounge breakout zone",
+];
 
 export default function BookTourPage() {
   return (
@@ -45,7 +53,7 @@ export default function BookTourPage() {
 
           <div className="max-w-3xl">
             <FadeUp delay={0.15} distance={15}>
-              <span className="text-xs sm:text-sm font-bold tracking-[0.2em] text-brass-400 uppercase block mb-3">
+              <span className="mb-3 block text-sm font-bold uppercase tracking-[0.2em] text-brass-400">
                 Private Guided Walkthrough
               </span>
             </FadeUp>
@@ -89,63 +97,57 @@ export default function BookTourPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             {/* Left Column: What Your Tour Includes */}
-            <div className="lg:col-span-5 space-y-6">
-              <div className="bg-charcoal-950 text-white p-8 rounded-sm border-2 border-brass-400/50 shadow-luxury">
-                <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-widest text-brass-300 mb-4">
-                  <Sparkles className="w-4 h-4 text-brass-400" />
-                  <span>VIP Tour Experience</span>
-                </div>
-                <h3 className="font-serif text-2xl font-bold text-white mb-4">
-                  What to Expect During Your Visit
-                </h3>
-                <p className="text-cream-200 text-sm leading-relaxed mb-6">
-                  Our senior workspace concierge will guide you through our 2nd-floor facilities, answer EJARI & Estidama questions, and customize a package tailored to your budget.
-                </p>
+            <div className="lg:col-span-5">
+              <div className={cardGridClass("stack")}>
+                <Card dark brassAccent hoverEffect={false} className="border-brass-400/50 bg-charcoal-950 shadow-luxury">
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <div className="mb-4 inline-flex flex-wrap items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-brass-300">
+                      <Sparkles aria-hidden="true" className="h-4 w-4 shrink-0 text-brass-400" />
+                      <span>VIP Tour Experience</span>
+                    </div>
 
-                <ul className="space-y-3.5 text-sm text-cream-100 border-t border-charcoal-800 pt-6">
-                  <li className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-brass-400/20 text-brass-400 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
-                      ✓
-                    </div>
-                    <span>Walkthrough of private cabins, hot desks & meeting rooms</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-brass-400/20 text-brass-400 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
-                      ✓
-                    </div>
-                    <span>Direct consultation on DED EJARI virtual office contracts</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-brass-400/20 text-brass-400 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
-                      ✓
-                    </div>
-                    <span>Complimentary trial day-pass in our coworking zone</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-brass-400/20 text-brass-400 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
-                      ✓
-                    </div>
-                    <span>Barista coffee & access to our pool & lounge breakout zone</span>
-                  </li>
-                </ul>
+                    <CardTitle dark>What to Expect During Your Visit</CardTitle>
+
+                    <CardText dark className="mt-3">
+                      Our senior workspace concierge will guide you through our 2nd-floor facilities, answer EJARI &amp; Estidama questions, and customize a package tailored to your budget.
+                    </CardText>
+
+                    <ul className="mt-5 space-y-3 border-t border-charcoal-800 pt-5">
+                      {TOUR_INCLUSIONS.map((item) => (
+                        <li
+                          key={item}
+                          className="flex min-w-0 items-start gap-3 text-[0.9375rem] leading-[1.55] text-cream-100 sm:text-base"
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brass-400/20 text-sm font-bold text-brass-400"
+                          >
+                            ✓
+                          </span>
+                          <span className="min-w-0">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Card>
+
+                {/* Immediate Phone Card */}
+                <FeatureCard
+                  brassAccent
+                  size="compact"
+                  title="Need an Immediate Tour Today?"
+                  description="Call our concierge directly for same-day walk-in availability at Madina Mall."
+                  footer={
+                    <a
+                      href={`tel:${COMPANY_DETAILS.phonePrimaryTel}`}
+                      className="inline-flex min-h-[44px] min-w-0 items-center justify-center gap-2 rounded-sm bg-maroon-900 px-5 py-3 text-[0.9375rem] font-bold uppercase leading-snug tracking-wider text-white transition-colors hover:bg-maroon-950"
+                    >
+                      <Phone aria-hidden="true" className="h-4 w-4 shrink-0 text-brass-300" />
+                      <span className="min-w-0">Call {COMPANY_DETAILS.phonePrimary}</span>
+                    </a>
+                  }
+                />
               </div>
-
-              {/* Immediate Phone Card */}
-              <Card brassAccent className="bg-white border-[#E2DAD0] p-6">
-                <h4 className="font-serif text-lg font-bold text-charcoal-950 mb-2">
-                  Need an Immediate Tour Today?
-                </h4>
-                <p className="text-xs sm:text-sm text-charcoal-700 mb-4">
-                  Call our concierge directly for same-day walk-in availability at Madina Mall.
-                </p>
-                <a
-                  href={`tel:${COMPANY_DETAILS.phonePrimaryTel}`}
-                  className="inline-flex items-center gap-2 px-5 py-3 text-sm font-bold uppercase tracking-wider bg-maroon-900 text-white rounded-sm hover:bg-maroon-950 transition-colors"
-                >
-                  <Phone className="w-4 h-4 text-brass-300" />
-                  <span>Call {COMPANY_DETAILS.phonePrimary}</span>
-                </a>
-              </Card>
             </div>
 
             {/* Right Column: Interactive Tour Booking Form */}

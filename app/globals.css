@@ -30,7 +30,11 @@
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
+    /* No global `overflow-x: hidden`. Anything that could overflow is
+       contained where it happens: decorative blobs sit inside sections with
+       their own `overflow-hidden`, and the wide comparison table scrolls
+       inside its own `overflow-x-auto` wrapper. */
+    overflow-wrap: break-word;
   }
 
   /* High contrast headings */
@@ -38,6 +42,10 @@
     color: #161213;
     font-family: var(--font-playfair), Georgia, serif;
     letter-spacing: -0.015em;
+    /* Headings wrap naturally: never truncated, never a fixed height, and
+       only broken mid-word when a single word cannot fit at all. */
+    overflow-wrap: break-word;
+    hyphens: none;
   }
 
   p {
@@ -91,7 +99,7 @@
   }
 
   .bg-radial-gradient {
-    background-radial: radial-gradient(circle at 50% 0%, rgba(197, 168, 128, 0.2) 0%, transparent 70%);
+    background-image: radial-gradient(circle at 50% 0%, rgba(197, 168, 128, 0.2) 0%, transparent 70%);
   }
 
   .glass-card {
@@ -106,5 +114,21 @@
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(197, 168, 128, 0.3);
+  }
+}
+
+@layer utilities {
+  /* Hover styling is gated to hover-capable pointers by Tailwind's
+     `hoverOnlyWhenSupported` flag (see tailwind.config.ts), so touch devices
+     get the `active:` pressed states instead of a stuck hover lift. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

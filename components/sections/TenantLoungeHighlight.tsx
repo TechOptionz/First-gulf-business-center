@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { Coffee, Sparkles, Users, ArrowRight } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
@@ -77,11 +76,11 @@ export default function TenantLoungeHighlight() {
             {/* Feature List */}
             <div className="space-y-4 pt-3 border-t border-charcoal-800">
               <FadeUp delay={0.4}>
-                <div className="flex items-start gap-4">
+                <div className="flex min-w-0 items-start gap-4">
                   <div className="w-10 h-10 rounded-sm bg-maroon-900 border border-brass-500/40 flex items-center justify-center text-brass-300 shrink-0 mt-0.5">
                     <Sparkles className="w-5 h-5" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-serif font-bold text-lg text-white">Full-Size Tournament Pool Table</h4>
                     <p className="text-sm sm:text-base text-cream-200">Challenge colleagues or break the ice with new clients over a friendly game of 8-ball.</p>
                   </div>
@@ -89,11 +88,11 @@ export default function TenantLoungeHighlight() {
               </FadeUp>
 
               <FadeUp delay={0.5}>
-                <div className="flex items-start gap-4">
+                <div className="flex min-w-0 items-start gap-4">
                   <div className="w-10 h-10 rounded-sm bg-maroon-900 border border-brass-500/40 flex items-center justify-center text-brass-300 shrink-0 mt-0.5">
                     <Users className="w-5 h-5" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-serif font-bold text-lg text-white">Plush Bean Bags & Designer Sofas</h4>
                     <p className="text-sm sm:text-base text-cream-200">Comfortable breakout zones for casual ideation, phone calls, or afternoon reading.</p>
                   </div>
@@ -101,11 +100,11 @@ export default function TenantLoungeHighlight() {
               </FadeUp>
 
               <FadeUp delay={0.6}>
-                <div className="flex items-start gap-4">
+                <div className="flex min-w-0 items-start gap-4">
                   <div className="w-10 h-10 rounded-sm bg-maroon-900 border border-brass-500/40 flex items-center justify-center text-brass-300 shrink-0 mt-0.5">
                     <Coffee className="w-5 h-5" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-serif font-bold text-lg text-white">Unlimited Artisan Coffee & Refreshments</h4>
                     <p className="text-sm sm:text-base text-cream-200">Bean-to-cup espresso machines, premium herbal teas, and filtered water included with all memberships.</p>
                   </div>

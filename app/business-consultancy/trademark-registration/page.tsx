@@ -1,10 +1,11 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { CheckCircle2, Award, Shield, FileCheck, Search, Scale, ArrowRight } from "lucide-react";
+import { CheckCircle2, Award, FileCheck, Search, Scale } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
+import FeatureCard from "@/components/ui/FeatureCard";
+import { cardGridClass } from "@/components/ui/CardGrid";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import TextReveal from "@/components/motion/TextReveal";
@@ -17,6 +18,33 @@ export const metadata: Metadata = {
   description:
     "Protect your brand name, logo, and intellectual property in the UAE with First Gulf Business Center. Official Ministry of Economy trademark search and filing.",
 };
+
+const TRADEMARK_STEPS = [
+  {
+    icon: <Search className="h-6 w-6" />,
+    title: "1. Brand Pre-Check",
+    description:
+      "Comprehensive conflict check to guarantee uniqueness before incurring ministry fees.",
+  },
+  {
+    icon: <FileCheck className="h-6 w-6" />,
+    title: "2. MoE Filing",
+    description:
+      "Preparation and submission of official documentation to the Ministry of Economy IP Directorate.",
+  },
+  {
+    icon: <Scale className="h-6 w-6" />,
+    title: "3. Gazette Publication",
+    description:
+      "Official publication in the UAE Trademark Bulletin and mandatory local Arabic newspapers.",
+  },
+  {
+    icon: <Award className="h-6 w-6" />,
+    title: "4. Certified Issuance",
+    description:
+      "Final acquisition and delivery of your 10-year official Trademark Registration Certificate.",
+  },
+];
 
 export default function TrademarkRegistrationPage() {
   return (
@@ -87,7 +115,7 @@ export default function TrademarkRegistrationPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-widest text-maroon-800 uppercase">
+              <div className="inline-flex flex-wrap items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-maroon-800">
                 <span className="w-6 h-[1.5px] bg-brass-400" />
                 <span>Intellectual Property Protection</span>
               </div>
@@ -96,11 +124,11 @@ export default function TrademarkRegistrationPage() {
                 Why Seek Our Trademark Registration Services?
               </h2>
 
-              <p className="text-sm sm:text-base text-charcoal-700 leading-relaxed">
+              <p className="text-base leading-[1.7] text-charcoal-800 sm:text-[1.0625rem]">
                 To ensure you obtain official approval from the UAE Ministry of Economy, submitting accurate classification documentation is a prerequisite. Any clerical error or prior conflict in the application will delay approval or lead to outright rejection.
               </p>
 
-              <p className="text-sm sm:text-base text-charcoal-700 leading-relaxed">
+              <p className="text-base leading-[1.7] text-charcoal-800 sm:text-[1.0625rem]">
                 With First Gulf Business Center, you can be assured of registering your trademark without delays or bureaucratic friction. We clarify all government official fees and legal costs upfront, guide you through every classification class, and monitor the official gazette for oppositions.
               </p>
 
@@ -111,7 +139,7 @@ export default function TrademarkRegistrationPage() {
                   "Management of official trademark journal announcements and publication",
                   "10-year validity protection with proactive renewal monitoring",
                 ].map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-charcoal-800">
+                  <div key={idx} className="flex min-w-0 items-start gap-2.5 text-[0.9375rem] leading-[1.55] text-charcoal-800 sm:text-base">
                     <CheckCircle2 className="w-4 h-4 text-maroon-800 shrink-0 mt-0.5" />
                     <span>{item}</span>
                   </div>
@@ -120,46 +148,18 @@ export default function TrademarkRegistrationPage() {
             </div>
 
             <div className="lg:col-span-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <Card brassAccent className="p-6 bg-cream-50/60 border-brass-300">
-                  <Search className="w-8 h-8 text-maroon-800 mb-3" />
-                  <h4 className="font-serif font-bold text-base text-charcoal-950 mb-1">
-                    1. Brand Pre-Check
-                  </h4>
-                  <p className="text-xs text-charcoal-600">
-                    Comprehensive conflict check to guarantee uniqueness before incurring ministry fees.
-                  </p>
-                </Card>
-
-                <Card brassAccent className="p-6 bg-cream-50/60 border-brass-300">
-                  <FileCheck className="w-8 h-8 text-maroon-800 mb-3" />
-                  <h4 className="font-serif font-bold text-base text-charcoal-950 mb-1">
-                    2. MoE Filing
-                  </h4>
-                  <p className="text-xs text-charcoal-600">
-                    Preparation and submission of official documentation to the Ministry of Economy IP Directorate.
-                  </p>
-                </Card>
-
-                <Card brassAccent className="p-6 bg-cream-50/60 border-brass-300">
-                  <Scale className="w-8 h-8 text-maroon-800 mb-3" />
-                  <h4 className="font-serif font-bold text-base text-charcoal-950 mb-1">
-                    3. Gazette Publication
-                  </h4>
-                  <p className="text-xs text-charcoal-600">
-                    Official publication in the UAE Trademark Bulletin and mandatory local Arabic newspapers.
-                  </p>
-                </Card>
-
-                <Card brassAccent className="p-6 bg-cream-50/60 border-brass-300">
-                  <Award className="w-8 h-8 text-maroon-800 mb-3" />
-                  <h4 className="font-serif font-bold text-base text-charcoal-950 mb-1">
-                    4. Certified Issuance
-                  </h4>
-                  <p className="text-xs text-charcoal-600">
-                    Final acquisition and delivery of your 10-year official Trademark Registration Certificate.
-                  </p>
-                </Card>
+              <div className={cardGridClass("compact", "sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2")}>
+                {TRADEMARK_STEPS.map((step) => (
+                  <FeatureCard
+                    key={step.title}
+                    brassAccent
+                    size="compact"
+                    icon={step.icon}
+                    title={step.title}
+                    description={step.description}
+                    className="bg-cream-50/60 border-brass-300"
+                  />
+                ))}
               </div>
             </div>
           </div>

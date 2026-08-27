@@ -2,10 +2,8 @@ import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import ImageReveal from "@/components/motion/ImageReveal";
-import { CheckCircle2, Shield, Users, Award, MapPin, Building2, Coffee, Sparkles, ArrowRight } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import TextReveal from "@/components/motion/TextReveal";
 import FadeUp from "@/components/motion/FadeUp";
@@ -48,7 +46,7 @@ export default function AboutPage() {
 
           <div className="max-w-3xl">
             <FadeUp delay={0.15} distance={15}>
-              <span className="text-xs sm:text-sm font-bold tracking-[0.2em] text-brass-400 uppercase block mb-3">
+              <span className="mb-3 block text-sm font-bold uppercase tracking-[0.2em] text-brass-400">
                 Established Excellence in Dubai
               </span>
             </FadeUp>
@@ -84,39 +82,41 @@ export default function AboutPage() {
       {/* Key Stats Bar */}
       <div className="bg-white border-b border-[#E2DAD0] py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="p-4 border-r border-cream-200 last:border-none">
+          {/* Dividers sit on the left edge of every item except the first in
+              each row, so no rule ever hangs off the end of a row. */}
+          <div className="grid grid-cols-2 gap-y-8 text-center sm:gap-x-6 md:grid-cols-4">
+            <div className="min-w-0 px-2 py-4 sm:px-4">
               <div className="font-serif text-4xl sm:text-5xl font-bold text-maroon-900 mb-1">
                 <AnimatedCounter value={500} suffix="+" />
               </div>
-              <div className="text-sm sm:text-base text-charcoal-800 font-bold uppercase tracking-wider">
+              <div className="text-balance text-sm font-bold uppercase leading-snug tracking-wider text-charcoal-800 sm:text-[0.9375rem]">
                 Companies Established
               </div>
             </div>
 
-            <div className="p-4 border-r border-cream-200 last:border-none">
+            <div className="min-w-0 border-l border-cream-200 px-2 py-4 sm:px-4">
               <div className="font-serif text-4xl sm:text-5xl font-bold text-maroon-900 mb-1">
                 <AnimatedCounter value={100} suffix="%" />
               </div>
-              <div className="text-sm sm:text-base text-charcoal-800 font-bold uppercase tracking-wider">
+              <div className="text-balance text-sm font-bold uppercase leading-snug tracking-wider text-charcoal-800 sm:text-[0.9375rem]">
                 EJARI & DED Compliance
               </div>
             </div>
 
-            <div className="p-4 border-r border-cream-200 last:border-none">
+            <div className="min-w-0 px-2 py-4 sm:px-4 md:border-l md:border-cream-200">
               <div className="font-serif text-4xl sm:text-5xl font-bold text-maroon-900 mb-1">
                 24/7
               </div>
-              <div className="text-sm sm:text-base text-charcoal-800 font-bold uppercase tracking-wider">
+              <div className="text-balance text-sm font-bold uppercase leading-snug tracking-wider text-charcoal-800 sm:text-[0.9375rem]">
                 Secure Access & Support
               </div>
             </div>
 
-            <div className="p-4">
+            <div className="min-w-0 border-l border-cream-200 px-2 py-4 sm:px-4">
               <div className="font-serif text-4xl sm:text-5xl font-bold text-maroon-900 mb-1">
                 4.9 ★
               </div>
-              <div className="text-sm sm:text-base text-charcoal-800 font-bold uppercase tracking-wider">
+              <div className="text-balance text-sm font-bold uppercase leading-snug tracking-wider text-charcoal-800 sm:text-[0.9375rem]">
                 Google Review Rating
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-6 space-y-6">
-              <span className="text-xs sm:text-sm font-bold tracking-widest text-maroon-900 uppercase block">
+              <span className="block text-sm font-bold uppercase tracking-widest text-maroon-900">
                 Our Corporate Vision
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-charcoal-950 leading-tight">

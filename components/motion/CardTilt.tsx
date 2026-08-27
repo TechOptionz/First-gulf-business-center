@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { useIsCompactViewport } from "@/lib/use-media-query";
 
 interface CardTiltProps {
   children: React.ReactNode;
@@ -15,8 +17,12 @@ export default function CardTilt({
   className = "",
 }: CardTiltProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isTouch, setIsTouch] = useState(false);
+  const isTouch = useIsCompactViewport();
   const shouldReduceMotion = useReducedMotion();
+
+  // The tilt wrapper sits between the grid item and the card, so it has to
+  // forward the stretched row height for `h-full` cards to equalise.
+  const wrapperClass = cn("flex h-full min-w-0 flex-col", className);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -24,11 +30,6 @@ export default function CardTilt({
   const rotateX = useSpring(x, { stiffness: 300, damping: 25 });
   const rotateY = useSpring(y, { stiffness: 300, damping: 25 });
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsTouch(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 1024);
-    }
-  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isTouch || shouldReduceMotion || !ref.current) return;
@@ -51,7 +52,7 @@ export default function CardTilt({
   };
 
   if (isTouch || shouldReduceMotion) {
-    return <div className={className}>{children}</div>;
+    return <div className={wrapperClass}>{children}</div>;
   }
 
   return (
@@ -59,8 +60,10 @@ export default function CardTilt({
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className={className}
+      // Without an explicit perspective the rotation renders as a flat squash
+      // rather than depth, which reads as the card changing size on hover.
+      style={{ rotateX, rotateY, transformPerspective: 1200, transformStyle: "preserve-3d" }}
+      className={wrapperClass}
     >
       {children}
     </motion.div>

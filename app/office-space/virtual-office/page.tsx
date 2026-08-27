@@ -1,10 +1,11 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { CheckCircle2, ShieldCheck, FileText, Building2, PhoneCall, MailCheck, Award, ArrowRight } from "lucide-react";
+import { CheckCircle2, Building2, PhoneCall, MailCheck } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
+import FeatureCard from "@/components/ui/FeatureCard";
+import { cardGridClass } from "@/components/ui/CardGrid";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import TextReveal from "@/components/motion/TextReveal";
@@ -17,6 +18,27 @@ export const metadata: Metadata = {
   description:
     "Get certified DED & RERA approved Virtual Office EJARI and Estidama contracts in Madina Mall, Dubai. Instant certificate issuance for trade license renewal & visa processing.",
 };
+
+const VIRTUAL_OFFICE_BENEFITS = [
+  {
+    icon: <Building2 className="h-6 w-6" />,
+    title: "Prestigious Registered Address",
+    description:
+      "Display “2nd Floor, Madina Mall, Office 2–20, Al Muhaisnah 4, Dubai, UAE” across your trade license, corporate website, bank accounts, and invoices.",
+  },
+  {
+    icon: <PhoneCall className="h-6 w-6" />,
+    title: "Dedicated Reception & Call Answering",
+    description:
+      "Professional multilingual receptionists greet your callers in your company name and forward messages or direct calls to your mobile instantly.",
+  },
+  {
+    icon: <MailCheck className="h-6 w-6" />,
+    title: "Mail & Courier Management",
+    description:
+      "Receive business mail, government notices, and bank letters with immediate email/WhatsApp photo notifications and secure physical holding.",
+  },
+];
 
 export default function VirtualOfficePage() {
   return (
@@ -87,7 +109,7 @@ export default function VirtualOfficePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-widest text-maroon-800 uppercase">
+              <div className="inline-flex flex-wrap items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-maroon-800">
                 <span className="w-6 h-[1.5px] bg-brass-400" />
                 <span>Dubai Regulatory Compliance</span>
               </div>
@@ -96,81 +118,47 @@ export default function VirtualOfficePage() {
                 Understanding EJARI & Estidama Compliance in Dubai
               </h2>
 
-              <p className="text-sm sm:text-base text-charcoal-700 leading-relaxed">
+              <p className="text-base leading-[1.7] text-charcoal-800 sm:text-[1.0625rem]">
                 Initiated by the Real Estate Regulatory Agency (RERA) in 2007, <strong>EJARI</strong> (meaning &ldquo;My Rent&rdquo; in Arabic) is the mandatory government system that authenticates all commercial rental contracts across Dubai. Every business entity holding a commercial, professional, or industrial license must provide an attested contract to the DED.
               </p>
 
-              <p className="text-sm sm:text-base text-charcoal-700 leading-relaxed">
+              <p className="text-base leading-[1.7] text-charcoal-800 sm:text-[1.0625rem]">
                 <strong>Estidama</strong> represents the modern sustainable virtual office model recognized by the Dubai DED. It allows entrepreneurs and international holding companies to obtain legitimate commercial tenancy agreements, sponsor employee visas, and establish local banking credentials without leasing massive square footage.
               </p>
 
-              <div className="p-4 bg-cream-100 border border-brass-300 rounded-sm text-xs sm:text-sm text-charcoal-800 space-y-2">
+              <div className="space-y-2.5 rounded-sm border border-brass-300 bg-cream-100 p-4 text-[0.9375rem] leading-[1.55] text-charcoal-800 sm:p-5 sm:text-base">
                 <div className="font-bold text-maroon-800 font-serif text-base">
                   What You Receive with First Gulf:
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-700 shrink-0" />
+                <div className="flex min-w-0 items-start gap-2">
+                  <CheckCircle2 aria-hidden="true" className="mt-[3px] h-4 w-4 shrink-0 text-green-700" />
                   <span>Official RERA attested EJARI certificate document</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-700 shrink-0" />
+                <div className="flex min-w-0 items-start gap-2">
+                  <CheckCircle2 aria-hidden="true" className="mt-[3px] h-4 w-4 shrink-0 text-green-700" />
                   <span>DED approved sustainable Estidama tenancy contract</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-700 shrink-0" />
+                <div className="flex min-w-0 items-start gap-2">
+                  <CheckCircle2 aria-hidden="true" className="mt-[3px] h-4 w-4 shrink-0 text-green-700" />
                   <span>Building inspection clearance and municipal approvals</span>
                 </div>
               </div>
             </div>
 
-            <div className="lg:col-span-6 space-y-4">
-              <Card brassAccent className="bg-white border-[#E8E2D8] p-6 sm:p-8">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 shrink-0">
-                    <Building2 className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-serif text-xl font-bold text-charcoal-950 mb-1">
-                      Prestigious Registered Address
-                    </h3>
-                    <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed">
-                      Display &ldquo;2nd Floor, Madina Mall, Office 2–20, Al Muhaisnah 4, Dubai, UAE&rdquo; across your trade license, corporate website, bank accounts, and invoices.
-                    </p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card brassAccent className="bg-white border-[#E8E2D8] p-6 sm:p-8">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 shrink-0">
-                    <PhoneCall className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-serif text-xl font-bold text-charcoal-950 mb-1">
-                      Dedicated Reception & Call Answering
-                    </h3>
-                    <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed">
-                      Professional multilingual receptionists greet your callers in your company name and forward messages or direct calls to your mobile instantly.
-                    </p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card brassAccent className="bg-white border-[#E8E2D8] p-6 sm:p-8">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 shrink-0">
-                    <MailCheck className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-serif text-xl font-bold text-charcoal-950 mb-1">
-                      Mail & Courier Management
-                    </h3>
-                    <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed">
-                      Receive business mail, government notices, and bank letters with immediate email/WhatsApp photo notifications and secure physical holding.
-                    </p>
-                  </div>
-                </div>
-              </Card>
+            <div className="lg:col-span-6">
+              <div className={cardGridClass("stack")}>
+                {VIRTUAL_OFFICE_BENEFITS.map((benefit) => (
+                  <FeatureCard
+                    key={benefit.title}
+                    layout="horizontal"
+                    size="compact"
+                    brassAccent
+                    icon={benefit.icon}
+                    title={benefit.title}
+                    description={benefit.description}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>

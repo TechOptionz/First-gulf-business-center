@@ -23,13 +23,12 @@ export default function AnimatedCounter({
   const [displayValue, setDisplayValue] = useState(0);
   const shouldReduceMotion = useReducedMotion();
 
+  // Reduced motion is derived at render time rather than pushed through an
+  // effect, so the final value is painted on the first frame.
   useEffect(() => {
-    if (shouldReduceMotion) {
-      setDisplayValue(value);
-      return;
-    }
+    if (shouldReduceMotion || !isInView) return;
 
-    if (isInView) {
+    {
       let startTime: number | null = null;
       let animationFrameId: number;
 
@@ -55,10 +54,12 @@ export default function AnimatedCounter({
     }
   }, [isInView, value, duration, shouldReduceMotion]);
 
+  const rendered = shouldReduceMotion ? value : displayValue;
+
   return (
     <span ref={ref} className={className}>
       {prefix}
-      {displayValue}
+      {rendered}
       {suffix}
     </span>
   );

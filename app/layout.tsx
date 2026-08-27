@@ -128,6 +128,17 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Entrance animations render with an inline `opacity: 0` that only
+            the motion runtime clears. Without JS every animated card would
+            stay invisible, so force the final state instead. */}
+        <noscript>
+          <style
+            dangerouslySetInnerHTML={{
+              __html:
+                "[style*='opacity:0']{opacity:1!important;transform:none!important}",
+            }}
+          />
+        </noscript>
       </head>
       <body className="min-h-screen flex flex-col bg-cream-100 text-charcoal-900 selection:bg-maroon-800 selection:text-white">
         <ScrollProgress />

@@ -15,10 +15,10 @@ export default function Badge({
   dot = true,
 }: BadgeProps) {
   const variantStyles = {
-    brass: "bg-brass-100/80 text-brass-900 border-brass-400 font-bold",
-    maroon: "bg-maroon-100/90 text-maroon-950 border-maroon-300 font-bold",
-    dark: "bg-charcoal-950 text-brass-300 border-brass-400/40 font-bold",
-    outline: "bg-white text-charcoal-950 border-charcoal-300 font-bold",
+    brass: "bg-brass-100/80 text-brass-900 border-brass-400",
+    maroon: "bg-maroon-100/90 text-maroon-950 border-maroon-300",
+    dark: "bg-charcoal-950 text-brass-300 border-brass-400/40",
+    outline: "bg-white text-charcoal-950 border-charcoal-300",
   };
 
   const dotStyles = {
@@ -31,13 +31,20 @@ export default function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 px-3.5 py-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-sm border shadow-xs transition-colors select-none max-w-full leading-snug",
+        // `max-w-full` + `min-w-0` keep a long category name inside the card
+        // instead of stretching it; the label wraps onto a second line.
+        "inline-flex max-w-full items-center gap-2 rounded-sm border px-3 py-1.5 text-sm font-bold uppercase leading-snug tracking-wider shadow-sm transition-colors select-none sm:px-3.5",
         variantStyles[variant],
         className
       )}
     >
-      {dot && <span className={cn("w-2 h-2 rounded-full animate-pulse shrink-0", dotStyles[variant])} />}
-      <span>{children}</span>
+      {dot && (
+        <span
+          aria-hidden="true"
+          className={cn("h-2 w-2 shrink-0 rounded-full", dotStyles[variant])}
+        />
+      )}
+      <span className="min-w-0 break-words">{children}</span>
     </span>
   );
 }

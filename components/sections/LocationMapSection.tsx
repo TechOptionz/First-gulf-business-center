@@ -14,7 +14,7 @@ export default function LocationMapSection() {
           {/* Left Column: Location Details */}
           <div className="lg:col-span-5 space-y-6">
             <FadeUp delay={0.1}>
-              <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold tracking-widest text-maroon-900 uppercase">
+              <div className="inline-flex flex-wrap items-center gap-2 text-sm font-bold uppercase tracking-widest text-maroon-900">
                 <span className="w-6 h-[2px] bg-brass-400" />
                 <span>Prime Dubai Location</span>
               </div>
@@ -34,11 +34,11 @@ export default function LocationMapSection() {
 
             <div className="space-y-5 pt-4 border-t border-cream-200 text-base text-charcoal-900 font-medium">
               <FadeUp delay={0.4}>
-                <div className="flex items-start gap-4">
+                <div className="flex min-w-0 items-start gap-4">
                   <div className="w-10 h-10 rounded-sm bg-cream-100 flex items-center justify-center text-maroon-800 shrink-0 border border-cream-300">
                     <MapPin className="w-5 h-5" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-serif font-bold text-lg text-charcoal-950">Official Address</h4>
                     <p className="text-sm sm:text-base text-charcoal-800">
                       2nd Floor, Madina Mall, Offices 2–20, Al Muhaisnah 4, Dubai, UAE (PO Box: 234438)
@@ -48,11 +48,11 @@ export default function LocationMapSection() {
               </FadeUp>
 
               <FadeUp delay={0.5}>
-                <div className="flex items-start gap-4">
+                <div className="flex min-w-0 items-start gap-4">
                   <div className="w-10 h-10 rounded-sm bg-cream-100 flex items-center justify-center text-maroon-800 shrink-0 border border-cream-300">
                     <Car className="w-5 h-5" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-serif font-bold text-lg text-charcoal-950">Covered Parking</h4>
                     <p className="text-sm sm:text-base text-charcoal-800">
                       Direct multi-story covered mall parking with rapid elevator access straight to the 2nd floor offices.
@@ -62,11 +62,11 @@ export default function LocationMapSection() {
               </FadeUp>
 
               <FadeUp delay={0.6}>
-                <div className="flex items-start gap-4">
+                <div className="flex min-w-0 items-start gap-4">
                   <div className="w-10 h-10 rounded-sm bg-cream-100 flex items-center justify-center text-maroon-800 shrink-0 border border-cream-300">
                     <Clock className="w-5 h-5" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-serif font-bold text-lg text-charcoal-950">Operating Hours</h4>
                     <p className="text-sm sm:text-base text-charcoal-800">
                       Reception: Mon–Sat 8:30 AM – 7:30 PM • 24/7 Biometric Keycard Access for Tenants.
@@ -120,7 +120,7 @@ export default function LocationMapSection() {
                       First Gulf Business Center
                     </span>
                   </div>
-                  <p className="text-xs sm:text-sm text-charcoal-800 font-medium">
+                  <p className="text-sm font-medium leading-snug text-charcoal-800">
                     2nd Floor, Madina Mall • Al Muhaisnah 4, Dubai
                   </p>
                 </div>

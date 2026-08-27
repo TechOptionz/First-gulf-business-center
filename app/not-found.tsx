@@ -1,6 +1,5 @@
 import React from "react";
-import Link from "next/link";
-import { ArrowLeft, Home, Building2, Phone } from "lucide-react";
+import { Home, Building2, Phone } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Logo from "@/components/ui/Logo";
 
@@ -16,11 +15,11 @@ export default function NotFound() {
           404
         </div>
 
-        <h1 className="font-serif text-2xl font-bold text-charcoal-950 mb-3">
+        <h1 className="mb-3 font-serif text-2xl font-bold leading-[1.25] text-charcoal-950">
           Page Not Found
         </h1>
 
-        <p className="text-sm text-charcoal-600 mb-8 leading-relaxed">
+        <p className="mb-8 text-base leading-[1.65] text-charcoal-800">
           The requested page could not be located. It may have been moved or updated as part of our platform improvements.
         </p>
 

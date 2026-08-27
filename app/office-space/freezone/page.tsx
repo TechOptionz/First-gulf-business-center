@@ -1,10 +1,11 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { CheckCircle2, Shield, Percent, Globe, Key, Wifi, Sparkles, Building, ArrowRight } from "lucide-react";
+import { Percent, Globe, Key } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
+import FeatureCard from "@/components/ui/FeatureCard";
+import { cardGridClass } from "@/components/ui/CardGrid";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import TextReveal from "@/components/motion/TextReveal";
@@ -18,6 +19,27 @@ export const metadata: Metadata = {
   description:
     "Furnished executive serviced offices for Freezone entities in Dubai. 100% foreign ownership, tax benefits, no trade barriers, and state-of-the-art tech infrastructure.",
 };
+
+const FREEZONE_BENEFITS = [
+  {
+    icon: <Percent className="h-6 w-6" />,
+    title: "100% Company Ownership",
+    description:
+      "Full foreign commercial equity ownership with complete capital and profit repatriation rights, giving your enterprise full sovereign control.",
+  },
+  {
+    icon: <Key className="h-6 w-6" />,
+    title: "Turnkey Serviced Suites",
+    description:
+      "Move in the same day with pre-installed ergonomic Italian furniture, dedicated telephony, high-speed fiber internet, and individual AC controls.",
+  },
+  {
+    icon: <Globe className="h-6 w-6" />,
+    title: "Zero Trade Barriers",
+    description:
+      "Seamless regional and global cross-border trading without currency restrictions, supported by our experienced corporate advisory team.",
+  },
+];
 
 export default function FreezoneOfficePage() {
   return (
@@ -92,42 +114,16 @@ export default function FreezoneOfficePage() {
             subtitle="Combine the tax and operational advantages of UAE Freezones with the prestige and comfort of a centrally situated executive business center."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card brassAccent className="p-8 bg-white border-[#E8E2D8]">
-              <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 mb-6">
-                <Percent className="w-6 h-6" />
-              </div>
-              <h3 className="font-serif text-xl font-bold text-charcoal-950 mb-2">
-                100% Company Ownership
-              </h3>
-              <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed">
-                Full foreign commercial equity ownership with complete capital and profit repatriation rights, giving your enterprise full sovereign control.
-              </p>
-            </Card>
-
-            <Card brassAccent className="p-8 bg-white border-[#E8E2D8]">
-              <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 mb-6">
-                <Key className="w-6 h-6" />
-              </div>
-              <h3 className="font-serif text-xl font-bold text-charcoal-950 mb-2">
-                Turnkey Serviced Suites
-              </h3>
-              <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed">
-                Move in the same day with pre-installed ergonomic Italian furniture, dedicated telephony, high-speed fiber internet, and individual AC controls.
-              </p>
-            </Card>
-
-            <Card brassAccent className="p-8 bg-white border-[#E8E2D8]">
-              <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 mb-6">
-                <Globe className="w-6 h-6" />
-              </div>
-              <h3 className="font-serif text-xl font-bold text-charcoal-950 mb-2">
-                Zero Trade Barriers
-              </h3>
-              <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed">
-                Seamless regional and global cross-border trading without currency restrictions, supported by our experienced corporate advisory team.
-              </p>
-            </Card>
+          <div className={cardGridClass("pillar")}>
+            {FREEZONE_BENEFITS.map((benefit) => (
+              <FeatureCard
+                key={benefit.title}
+                brassAccent
+                icon={benefit.icon}
+                title={benefit.title}
+                description={benefit.description}
+              />
+            ))}
           </div>
         </div>
       </section>

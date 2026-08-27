@@ -3,6 +3,7 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
+import { useIsCompactViewport } from "@/lib/use-media-query";
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -11,13 +12,7 @@ interface PageTransitionProps {
 export default function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname();
   const shouldReduceMotion = useReducedMotion();
-  const [isMobile, setIsMobile] = React.useState(false);
-
-  React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsMobile(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 1024);
-    }
-  }, []);
+  const isMobile = useIsCompactViewport();
 
   if (shouldReduceMotion || isMobile) {
     return <>{children}</>;

@@ -84,22 +84,22 @@ export default function HeroSection() {
 
           {/* Trust Highlights Strip */}
           <FadeUp delay={0.75} distance={15}>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-charcoal-800/80 text-sm sm:text-base">
-              <div className="flex items-center gap-2.5">
-                <Shield className="w-5 h-5 text-brass-400 shrink-0" />
-                <span className="text-cream-100 font-bold">100% EJARI Compliant</span>
+            <div className="grid grid-cols-1 items-start gap-x-4 gap-y-3 border-t border-charcoal-800/80 pt-8 text-sm sm:grid-cols-2 sm:text-base lg:grid-cols-4">
+              <div className="flex min-w-0 items-start gap-2.5">
+                <Shield className="mt-0.5 h-5 w-5 shrink-0 text-brass-400" />
+                <span className="min-w-0 font-bold leading-snug text-cream-100">100% EJARI Compliant</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle className="w-5 h-5 text-brass-400 shrink-0" />
-                <span className="text-cream-100 font-bold">Move-In Same Day</span>
+              <div className="flex min-w-0 items-start gap-2.5">
+                <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-brass-400" />
+                <span className="min-w-0 font-bold leading-snug text-cream-100">Move-In Same Day</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <Award className="w-5 h-5 text-brass-400 shrink-0" />
-                <span className="text-cream-100 font-bold">24/7 Operations</span>
+              <div className="flex min-w-0 items-start gap-2.5">
+                <Award className="mt-0.5 h-5 w-5 shrink-0 text-brass-400" />
+                <span className="min-w-0 font-bold leading-snug text-cream-100">24/7 Operations</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <MapPin className="w-5 h-5 text-brass-400 shrink-0" />
-                <span className="text-cream-100 font-bold">Mall Parking Direct</span>
+              <div className="flex min-w-0 items-start gap-2.5">
+                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-brass-400" />
+                <span className="min-w-0 font-bold leading-snug text-cream-100">Mall Parking Direct</span>
               </div>
             </div>
           </FadeUp>

@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="bg-white p-8 sm:p-12 rounded-sm border border-[#E2DAD0] shadow-card space-y-8 text-charcoal-900">
           <div>
-            <span className="text-xs sm:text-sm font-bold text-maroon-900 uppercase tracking-widest block mb-2">
+            <span className="mb-2 block text-sm font-bold uppercase tracking-widest text-maroon-900">
               Legal Compliance
             </span>
             <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-charcoal-950 mb-3">

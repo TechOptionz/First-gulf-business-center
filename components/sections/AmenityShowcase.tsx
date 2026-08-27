@@ -14,21 +14,22 @@ import {
   Sparkle,
 } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
+import FeatureCard from "@/components/ui/FeatureCard";
+import { cardGridClass } from "@/components/ui/CardGrid";
 import { StaggerContainer, StaggerItem } from "@/components/motion/StaggerContainer";
 import { FACILITIES } from "@/data/content";
 
 const iconMap: Record<string, React.ReactNode> = {
-  Wind: <Wind className="w-6 h-6 text-maroon-800" />,
-  Users: <Users className="w-6 h-6 text-maroon-800" />,
-  Coffee: <Coffee className="w-6 h-6 text-maroon-800" />,
-  ShieldCheck: <ShieldCheck className="w-6 h-6 text-maroon-800" />,
-  Zap: <Zap className="w-6 h-6 text-maroon-800" />,
-  Car: <Car className="w-6 h-6 text-maroon-800" />,
-  Wifi: <Wifi className="w-6 h-6 text-maroon-800" />,
-  Sparkles: <Sparkles className="w-6 h-6 text-brass-700" />,
-  Presentation: <Presentation className="w-6 h-6 text-maroon-800" />,
-  Sparkle: <Sparkle className="w-6 h-6 text-maroon-800" />,
+  Wind: <Wind className="h-6 w-6" />,
+  Users: <Users className="h-6 w-6" />,
+  Coffee: <Coffee className="h-6 w-6" />,
+  ShieldCheck: <ShieldCheck className="h-6 w-6" />,
+  Zap: <Zap className="h-6 w-6" />,
+  Car: <Car className="h-6 w-6" />,
+  Wifi: <Wifi className="h-6 w-6" />,
+  Sparkles: <Sparkles className="h-6 w-6" />,
+  Presentation: <Presentation className="h-6 w-6" />,
+  Sparkle: <Sparkle className="h-6 w-6" />,
 };
 
 export default function AmenityShowcase() {
@@ -41,47 +42,26 @@ export default function AmenityShowcase() {
           subtitle="Every essential business amenity is curated to ensure seamless daily operations for you and your team."
         />
 
-        <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <StaggerContainer className={cardGridClass("horizontal")}>
           {FACILITIES.map((amenity) => (
             <StaggerItem key={amenity.id}>
-              <Card
+              <FeatureCard
+                layout="horizontal"
+                size="compact"
                 brassAccent={amenity.highlight}
-                className={`flex items-start gap-4.5 p-6 transition-all duration-300 ${
-                  amenity.highlight
-                    ? "border-brass-400 bg-cream-50/90 shadow-luxury hover:border-maroon-800"
-                    : "border-[#E2DAD0] bg-white hover:border-brass-300 hover:shadow-md"
-                }`}
-              >
-                <div
-                  className={`w-13 h-13 rounded-sm flex items-center justify-center shrink-0 border transition-transform duration-300 group-hover:scale-110 ${
-                    amenity.highlight
-                      ? "bg-maroon-800 text-brass-300 border-brass-400"
-                      : "bg-cream-100 border-cream-200"
-                  }`}
-                >
-                  {amenity.highlight ? (
-                    <Sparkles className="w-6 h-6 text-brass-300 animate-pulse" />
+                highlight={amenity.highlight}
+                icon={
+                  amenity.highlight ? (
+                    <Sparkles className="h-6 w-6" />
                   ) : (
                     iconMap[amenity.icon]
-                  )}
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <h3 className="font-serif text-xl font-bold text-charcoal-950">
-                      {amenity.title}
-                    </h3>
-                    {amenity.highlight && (
-                      <span className="text-[11px] uppercase font-bold tracking-wider px-2 py-0.5 bg-maroon-100 text-maroon-950 rounded-xs border border-maroon-300">
-                        Exclusive
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-base text-charcoal-800 leading-relaxed font-normal">
-                    {amenity.description}
-                  </p>
-                </div>
-              </Card>
+                  )
+                }
+                iconTone={amenity.highlight ? "dark" : "cream"}
+                title={amenity.title}
+                tag={amenity.highlight ? "Exclusive" : undefined}
+                description={amenity.description}
+              />
             </StaggerItem>
           ))}
         </StaggerContainer>

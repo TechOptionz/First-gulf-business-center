@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
+import { useIsCompactViewport } from "@/lib/use-media-query";
 
 interface MagneticButtonProps {
   children: React.ReactNode;
@@ -15,7 +16,7 @@ export default function MagneticButton({
   className = "",
 }: MagneticButtonProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const isTouchDevice = useIsCompactViewport();
   const shouldReduceMotion = useReducedMotion();
 
   const rawX = useMotionValue(0);
@@ -24,11 +25,6 @@ export default function MagneticButton({
   const x = useSpring(rawX, { stiffness: 250, damping: 20, mass: 0.5 });
   const y = useSpring(rawY, { stiffness: 250, damping: 20, mass: 0.5 });
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 1024);
-    }
-  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isTouchDevice || shouldReduceMotion || !ref.current) return;

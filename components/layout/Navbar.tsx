@@ -28,29 +28,18 @@ import { cn } from "@/lib/utils";
 export default function Navbar() {
   const pathname = usePathname();
   const shouldReduceMotion = useReducedMotion();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<Record<string, boolean>>({});
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Close mobile menu on route change & manage body scroll lock
-  useEffect(() => {
+  // Close the mobile menu on route change. Adjusting state during render is
+  // React's documented alternative to an effect that only resets state.
+  const [lastPathname, setLastPathname] = useState(pathname);
+  if (lastPathname !== pathname) {
+    setLastPathname(pathname);
     setMobileMenuOpen(false);
     setActiveDropdown(null);
-  }, [pathname]);
+  }
 
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -120,20 +109,20 @@ export default function Navbar() {
       </div>
 
       {/* Main Sticky Header */}
-      <header className="sticky top-0 z-50 bg-white/98 backdrop-blur-md shadow-xs py-3 border-b border-[#E2DAD0] w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <header className="sticky top-0 z-50 bg-white/98 backdrop-blur-md shadow-sm py-3 border-b border-[#E2DAD0] w-full">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 sm:px-6 lg:px-8">
           {/* Brand Logo */}
-          <div className="flex-shrink-0 mr-6 lg:mr-8 xl:mr-12">
+          <div className="mr-2 shrink-0 lg:mr-4 xl:mr-8">
             <Logo
               width={180}
               height={62}
               priority
-              className="transition-opacity duration-200"
+              className="w-[150px] transition-opacity duration-200 lg:w-[160px] xl:w-[180px]"
             />
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-1 xl:space-x-3 shrink-0">
+          <nav className="hidden min-w-0 flex-1 items-center justify-end gap-0.5 lg:flex xl:gap-1.5 2xl:gap-2">
             {NAVIGATION_LINKS.map((link) => {
               const hasChildren = link.children && link.children.length > 0;
               const isActive =
@@ -146,7 +135,7 @@ export default function Navbar() {
                     key={link.name}
                     href={link.href}
                     className={cn(
-                      "px-3 py-2 text-xs lg:text-sm xl:text-base font-bold tracking-wide uppercase whitespace-nowrap transition-colors rounded-sm relative group",
+                      "relative shrink-0 rounded-sm px-2 py-2 text-[0.8125rem] font-bold uppercase tracking-wide whitespace-nowrap transition-colors xl:px-3 xl:text-sm 2xl:text-base",
                       isActive
                         ? "text-maroon-900 bg-maroon-50/90"
                         : "text-charcoal-900 hover:text-maroon-800 hover:bg-cream-100"
@@ -174,7 +163,7 @@ export default function Navbar() {
                   <Link
                     href={link.href}
                     className={cn(
-                      "px-3 py-2 text-xs lg:text-sm xl:text-base font-bold tracking-wide uppercase whitespace-nowrap transition-colors rounded-sm inline-flex items-center gap-1.5 relative group",
+                      "relative inline-flex shrink-0 items-center gap-1 rounded-sm px-2 py-2 text-[0.8125rem] font-bold uppercase tracking-wide whitespace-nowrap transition-colors xl:gap-1.5 xl:px-3 xl:text-sm 2xl:text-base",
                       isActive
                         ? "text-maroon-900 bg-maroon-50/90"
                         : "text-charcoal-900 hover:text-maroon-800 hover:bg-cream-100"
@@ -204,7 +193,7 @@ export default function Navbar() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 4, scale: 0.98 }}
                         transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
-                        className="absolute top-full left-0 w-84 bg-white border border-brass-300 rounded-sm shadow-luxury-hover p-2.5 mt-1 z-50"
+                        className="absolute top-full left-0 w-[21rem] bg-white border border-brass-300 rounded-sm shadow-luxury-hover p-2.5 mt-1 z-50"
                       >
                         <div className="p-2 border-b border-cream-200 mb-1.5 bg-cream-50">
                           <span className="text-xs font-bold tracking-widest text-maroon-900 uppercase">
@@ -221,18 +210,18 @@ export default function Navbar() {
                               <div className="w-8 h-8 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center shrink-0 group-hover:bg-maroon-800 group-hover:text-white transition-colors">
                                 {getSubmenuIcon(subItem.href)}
                               </div>
-                              <div className="flex-1">
-                                <div className="flex items-center justify-between">
-                                  <span className="font-serif text-base font-bold text-charcoal-950 group-hover:text-maroon-800 transition-colors">
+                              <div className="min-w-0 flex-1">
+                                <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1">
+                                  <span className="min-w-0 font-serif text-base font-bold leading-snug text-charcoal-950 transition-colors group-hover:text-maroon-800">
                                     {subItem.name}
                                   </span>
                                   {subItem.badge && (
-                                    <span className="text-xs uppercase tracking-wider font-bold px-2 py-0.5 bg-brass-100 text-brass-900 rounded-xs border border-brass-300">
+                                    <span className="shrink-0 rounded-sm border border-brass-300 bg-brass-100 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-brass-900">
                                       {subItem.badge}
                                     </span>
                                   )}
                                 </div>
-                                <p className="text-xs sm:text-sm text-charcoal-700 mt-1 leading-snug font-normal">
+                                <p className="mt-1 text-sm font-normal leading-snug text-charcoal-700">
                                   {subItem.description}
                                 </p>
                               </div>
@@ -248,10 +237,10 @@ export default function Navbar() {
           </nav>
 
           {/* Right Header Action: Book a Tour */}
-          <div className="hidden sm:flex items-center space-x-3">
+          <div className="hidden shrink-0 items-center gap-2 sm:flex xl:gap-3">
             <a
               href={`tel:${COMPANY_DETAILS.phonePrimaryTel}`}
-              className="hidden xl:inline-flex items-center gap-1.5 text-sm font-bold text-charcoal-900 hover:text-maroon-800 py-2 px-3 rounded-sm border border-transparent hover:border-cream-300"
+              className="hidden shrink-0 items-center gap-1.5 rounded-sm border border-transparent px-3 py-2 text-sm font-bold text-charcoal-900 hover:border-cream-300 hover:text-maroon-800 2xl:inline-flex"
             >
               <Phone className="w-4 h-4 text-brass-700" />
               <span>Call Us</span>
@@ -303,7 +292,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="fixed inset-0 bg-charcoal-950/70 backdrop-blur-xs"
+              className="fixed inset-0 bg-charcoal-950/70 backdrop-blur-sm"
               onClick={() => setMobileMenuOpen(false)}
             />
 
@@ -393,16 +382,16 @@ export default function Navbar() {
                             <Link
                               key={subItem.name}
                               href={subItem.href}
-                              className="p-3 rounded-sm hover:bg-cream-100 flex items-start gap-3 block text-left"
+                              className="flex min-h-[44px] min-w-0 items-start gap-3 rounded-sm p-3 text-left hover:bg-cream-100"
                             >
                               <div className="w-7 h-7 rounded-sm bg-maroon-50 flex items-center justify-center shrink-0 mt-0.5">
                                 {getSubmenuIcon(subItem.href)}
                               </div>
-                              <div>
-                                <div className="font-bold text-sm text-charcoal-950">
+                              <div className="min-w-0 flex-1">
+                                <div className="min-w-0 text-[0.9375rem] font-bold leading-snug text-charcoal-950">
                                   {subItem.name}
                                 </div>
-                                <div className="text-xs text-charcoal-700 line-clamp-1 font-normal">
+                                <div className="mt-0.5 min-w-0 text-sm font-normal leading-snug text-charcoal-700">
                                   {subItem.description}
                                 </div>
                               </div>

@@ -3,6 +3,7 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useIsCompactViewport } from "@/lib/use-media-query";
 
 interface ImageRevealProps {
   children: React.ReactNode;
@@ -16,15 +17,7 @@ export default function ImageReveal({
   delay = 0,
 }: ImageRevealProps) {
   const shouldReduceMotion = useReducedMotion();
-  const [isMobile, setIsMobile] = React.useState(false);
-
-  React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsMobile(
-        window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 1024
-      );
-    }
-  }, []);
+  const isMobile = useIsCompactViewport();
 
   if (shouldReduceMotion) {
     return (

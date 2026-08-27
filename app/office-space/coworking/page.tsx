@@ -1,10 +1,11 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { CheckCircle2, Clock, Users, Coffee, Wifi, Sparkles, Calendar, ArrowRight } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
+import Card, { CardTitle, CardText, CardFooter } from "@/components/ui/Card";
+import { cardGridClass } from "@/components/ui/CardGrid";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import TextReveal from "@/components/motion/TextReveal";
@@ -17,6 +18,40 @@ export const metadata: Metadata = {
   description:
     "Cost-effective, amenity-rich coworking spaces in Madina Mall, Dubai. Hourly, daily, and monthly terms with high-speed fiber internet and free tenant pool lounge access.",
 };
+
+const DESK_PLANS = [
+  {
+    badge: "Maximum Flexibility",
+    title: "Flexi Hot Desk",
+    terms: "Hourly, Daily & 10-Day Passes Available",
+    description:
+      "Drop in anytime and grab any open workstation in our bright, ergonomic coworking area. Perfect for remote workers, consultants, and business travelers.",
+    features: [
+      "High-speed enterprise fiber Wi-Fi access",
+      "Full central air conditioning and power outlets",
+      "Unlimited artisan bean-to-cup coffee & tea",
+      "Free access to tenant pool table & bean bag lounge",
+    ],
+    cta: "Inquire for Hot Desk",
+    featured: false,
+  },
+  {
+    badge: "Most Popular",
+    title: "Dedicated Permanent Desk",
+    terms: "Monthly & Quarterly Retained Terms",
+    description:
+      "Your own reserved desk that remains exclusively yours 24/7. Includes lockable storage pedestal, mail handling, and professional business address privileges.",
+    features: [
+      "Dedicated permanent desk with lockable storage",
+      "24/7 Electronic keycard security access",
+      "Front desk mail & package collection",
+      "Monthly complimentary meeting room hours",
+      "Free access to pool table & tenant relaxation lounge",
+    ],
+    cta: "Reserve Dedicated Desk",
+    featured: true,
+  },
+];
 
 export default function CoworkingPage() {
   return (
@@ -91,92 +126,58 @@ export default function CoworkingPage() {
             subtitle="Whether you drop in for a few hours of deep focus or require a permanent dedicated desk with storage."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Hot Desk Card */}
-            <Card brassAccent className="bg-white border-[#E8E2D8] p-8 flex flex-col justify-between">
-              <div>
-                <Badge variant="maroon" className="mb-4">
-                  Maximum Flexibility
-                </Badge>
-                <h3 className="font-serif text-2xl font-bold text-charcoal-950 mb-2">
-                  Flexi Hot Desk
-                </h3>
-                <p className="text-xs text-brass-700 font-semibold uppercase tracking-wider mb-4">
-                  Hourly, Daily & 10-Day Passes Available
-                </p>
-                <p className="text-sm text-charcoal-600 mb-6 leading-relaxed">
-                  Drop in anytime and grab any open workstation in our bright, ergonomic coworking area. Perfect for remote workers, consultants, and business travelers.
-                </p>
+          <div className={cardGridClass("pair", "mx-auto max-w-4xl")}>
+            {DESK_PLANS.map((plan) => (
+              <Card
+                key={plan.title}
+                brassAccent
+                className={plan.featured ? "border-brass-400 bg-cream-50/80 shadow-luxury" : undefined}
+              >
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    <Badge variant={plan.featured ? "brass" : "maroon"}>{plan.badge}</Badge>
+                  </div>
 
-                <div className="space-y-2.5 mb-8 border-t border-cream-200 pt-5 text-xs sm:text-sm text-charcoal-700">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-maroon-800 shrink-0" />
-                    <span>High-speed enterprise fiber Wi-Fi access</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-maroon-800 shrink-0" />
-                    <span>Full central air conditioning and power outlets</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-maroon-800 shrink-0" />
-                    <span>Unlimited artisan bean-to-cup coffee & tea</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-maroon-800 shrink-0" />
-                    <span>Free access to tenant pool table & bean bag lounge</span>
-                  </div>
+                  <CardTitle>{plan.title}</CardTitle>
+
+                  <p
+                    className={`mt-2 text-sm font-semibold uppercase leading-snug tracking-[0.08em] ${
+                      plan.featured ? "text-maroon-800" : "text-brass-800"
+                    }`}
+                  >
+                    {plan.terms}
+                  </p>
+
+                  <CardText className="mt-3">{plan.description}</CardText>
+
+                  <ul className="mt-5 space-y-2.5 border-t border-cream-200 pt-5">
+                    {plan.features.map((feature) => (
+                      <li
+                        key={feature}
+                        className="flex min-w-0 items-start gap-2.5 text-[0.9375rem] leading-[1.55] text-charcoal-800 sm:text-base"
+                      >
+                        <CheckCircle2
+                          aria-hidden="true"
+                          className="mt-[3px] h-4 w-4 shrink-0 text-maroon-800"
+                        />
+                        <span className="min-w-0">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </div>
 
-              <Button href="#book-desk" variant="outline" size="md" fullWidth>
-                Inquire for Hot Desk
-              </Button>
-            </Card>
-
-            {/* Dedicated Desk Card */}
-            <Card brassAccent className="bg-cream-50/80 border-brass-400 p-8 flex flex-col justify-between shadow-luxury">
-              <div>
-                <Badge variant="brass" className="mb-4">
-                  Most Popular
-                </Badge>
-                <h3 className="font-serif text-2xl font-bold text-charcoal-950 mb-2">
-                  Dedicated Permanent Desk
-                </h3>
-                <p className="text-xs text-maroon-800 font-semibold uppercase tracking-wider mb-4">
-                  Monthly & Quarterly Retained Terms
-                </p>
-                <p className="text-sm text-charcoal-600 mb-6 leading-relaxed">
-                  Your own reserved desk that remains exclusively yours 24/7. Includes lockable storage pedestal, mail handling, and professional business address privileges.
-                </p>
-
-                <div className="space-y-2.5 mb-8 border-t border-cream-200 pt-5 text-xs sm:text-sm text-charcoal-700">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-maroon-800 shrink-0" />
-                    <span>Dedicated permanent desk with lockable storage</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-maroon-800 shrink-0" />
-                    <span>24/7 Electronic keycard security access</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-maroon-800 shrink-0" />
-                    <span>Front desk mail & package collection</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-maroon-800 shrink-0" />
-                    <span>Monthly complimentary meeting room hours</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-maroon-800 shrink-0" />
-                    <span>Free access to pool table & tenant relaxation lounge</span>
-                  </div>
-                </div>
-              </div>
-
-              <Button href="#book-desk" variant="primary" size="md" fullWidth>
-                Reserve Dedicated Desk
-              </Button>
-            </Card>
+                <CardFooter>
+                  <Button
+                    href="#book-desk"
+                    variant={plan.featured ? "primary" : "outline"}
+                    size="md"
+                    fullWidth
+                  >
+                    {plan.cta}
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
           </div>
         </div>
       </section>

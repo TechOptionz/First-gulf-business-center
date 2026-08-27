@@ -66,6 +66,9 @@ export default function FloatingContact() {
   const [messages, setMessages] = useState<ChatMessage[]>([initialMessage]);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [tailSpacer, setTailSpacer] = useState(0);
+  // Monotonic id source: `Date.now()` is impure and cannot be called while
+  // rendering, and a counter is enough to key the message list.
+  const messageIdRef = useRef(0);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement | null>(null);
 
@@ -118,6 +121,9 @@ export default function FloatingContact() {
 
     // Nothing asked yet - show the welcome message from its start.
     if (!anchor) {
+      // The spacer can only be resolved after layout, which is exactly what
+      // this layout effect measures; there is no render-time equivalent.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (tailSpacer !== 0) setTailSpacer(0);
       container.scrollTop = 0;
       return;
@@ -249,8 +255,9 @@ export default function FloatingContact() {
   const handleSendMessage = (userText: string) => {
     if (!userText.trim()) return;
 
+    messageIdRef.current += 1;
     const userMsg: ChatMessage = {
-      id: `user-${Date.now()}`,
+      id: `user-${messageIdRef.current}`,
       sender: "user",
       text: userText,
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
@@ -265,7 +272,7 @@ export default function FloatingContact() {
       const suggestions = getFollowUpSuggestions(userText);
 
       const botMsg: ChatMessage = {
-        id: `bot-${Date.now()}`,
+        id: `bot-${messageIdRef.current}`,
         sender: "bot",
         text: botResponseText,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
@@ -400,7 +407,7 @@ export default function FloatingContact() {
                         key={sq}
                         type="button"
                         onClick={() => handleSendMessage(sq)}
-                        className="w-full text-left px-3 py-2 text-xs font-semibold text-charcoal-950 bg-white hover:bg-maroon-900 hover:text-white border border-cream-300 rounded-sm transition-colors cursor-pointer flex items-center justify-between group shadow-2xs"
+                        className="w-full text-left px-3 py-2 text-xs font-semibold text-charcoal-950 bg-white hover:bg-maroon-900 hover:text-white border border-cream-300 rounded-sm transition-colors cursor-pointer flex items-center justify-between group shadow-sm"
                       >
                         <span>{sq}</span>
                         <ChevronRight className="w-3.5 h-3.5 text-brass-600 group-hover:text-brass-300 shrink-0 ml-1" />

@@ -1,12 +1,9 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import ImageReveal from "@/components/motion/ImageReveal";
-import Link from "next/link";
-import { ArrowRight, Check, Sparkles, Building2, ShieldCheck, Briefcase } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
+import FeaturedCard from "@/components/ui/FeaturedCard";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import TextReveal from "@/components/motion/TextReveal";
@@ -90,88 +87,51 @@ export default function OfficeSpacePage() {
             subtitle="All workspaces include high-speed fiber internet, full air conditioning, daily maintenance, and complimentary access to our signature tenant wellbeing lounge."
           />
 
-          <div className="space-y-16">
-            {WORKSPACE_SERVICES.map((workspace, index) => {
-              const isEven = index % 2 === 1;
-
-              return (
-                <div
-                  key={workspace.id}
-                  id={workspace.id}
-                  className={`grid grid-cols-1 lg:grid-cols-12 gap-10 items-center p-6 sm:p-10 rounded-sm border border-[#E8E2D8] bg-cream-50/50 shadow-card ${
-                    isEven ? "lg:flex-row-reverse" : ""
-                  }`}
-                >
-                  <div className={`lg:col-span-6 ${isEven ? "lg:order-2" : ""}`}>
-                    <div className="relative aspect-[16/10] w-full rounded-sm overflow-hidden border border-brass-300 shadow-md">
-                      <ImageReveal className="w-full h-full">
-                        <Image
-                          src={workspace.image}
-                          alt={workspace.title}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 1024px) 100vw, 50vw"
-                        />
-                      </ImageReveal>
-                    </div>
-                  </div>
-
-                  <div className={`lg:col-span-6 space-y-5 ${isEven ? "lg:order-1" : ""}`}>
-                    <div>
-                      <span className="text-xs font-bold text-maroon-800 uppercase tracking-widest block mb-1">
-                        Workspace Option {index + 1}
-                      </span>
-                      <h2 className="font-serif text-2xl sm:text-3xl font-bold text-charcoal-950">
-                        {workspace.title}
-                      </h2>
-                      <p className="text-xs font-semibold text-brass-700 uppercase tracking-wider mt-1">
-                        {workspace.tagline}
-                      </p>
-                    </div>
-
-                    <p className="text-sm text-charcoal-700 leading-relaxed">
-                      {workspace.shortDesc}
-                    </p>
-
-                    <div className="bg-white p-4 rounded-sm border border-cream-200">
-                      <div className="text-xs font-bold uppercase tracking-wider text-charcoal-500 mb-2.5">
-                        Included Features & Amenities:
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-charcoal-800">
-                        {workspace.features.map((feat, fIdx) => (
-                          <div key={fIdx} className="flex items-start gap-2">
-                            <Check className="w-3.5 h-3.5 text-maroon-800 shrink-0 mt-0.5" />
-                            <span>{feat}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="text-xs text-charcoal-600 italic">
-                      🎯 <strong>Ideal for:</strong> {workspace.idealFor}
-                    </div>
-
-                    <div className="pt-2 flex flex-wrap items-center gap-3">
-                      <Button
-                        href={workspace.href}
-                        variant="primary"
-                        size="sm"
-                        icon={<ArrowRight className="w-4 h-4" />}
-                      >
-                        Explore {workspace.title}
-                      </Button>
-                      <Button
-                        href={`/book-a-tour?workspace=${workspace.id}`}
-                        variant="secondary"
-                        size="sm"
-                      >
-                        Book This Space
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="space-y-8 sm:space-y-10 lg:space-y-12">
+            {WORKSPACE_SERVICES.map((workspace, index) => (
+              <FeaturedCard
+                key={workspace.id}
+                id={workspace.id}
+                reverse={index % 2 === 1}
+                image={workspace.image}
+                imageAlt={workspace.title}
+                eyebrow={`Workspace Option ${index + 1}`}
+                title={workspace.title}
+                tagline={workspace.tagline}
+                description={workspace.shortDesc}
+                details={{
+                  label: "Included Features & Amenities",
+                  items: workspace.features,
+                }}
+                meta={
+                  <span className="min-w-0 italic">
+                    🎯 <strong className="font-semibold not-italic">Ideal for:</strong>{" "}
+                    {workspace.idealFor}
+                  </span>
+                }
+                actions={
+                  <>
+                    <Button
+                      href={workspace.href}
+                      variant="primary"
+                      size="sm"
+                      withArrow
+                      className="w-full sm:w-auto"
+                    >
+                      Explore {workspace.title}
+                    </Button>
+                    <Button
+                      href={`/book-a-tour?workspace=${workspace.id}`}
+                      variant="secondary"
+                      size="sm"
+                      className="w-full sm:w-auto"
+                    >
+                      Book This Space
+                    </Button>
+                  </>
+                }
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -186,7 +146,7 @@ export default function OfficeSpacePage() {
           />
 
           <div className="bg-white rounded-sm border border-[#E8E2D8] shadow-card overflow-x-auto">
-            <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[650px]">
+            <table className="w-full min-w-[680px] border-collapse text-left text-sm sm:text-base">
               <thead>
                 <tr className="bg-charcoal-950 text-white border-b border-brass-400">
                   <th className="p-4 font-serif font-bold text-brass-300 w-1/4">Feature / Service</th>

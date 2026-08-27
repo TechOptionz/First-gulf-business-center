@@ -1,12 +1,11 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import ImageReveal from "@/components/motion/ImageReveal";
-import Link from "next/link";
-import { ArrowRight, CheckCircle2, Shield, Briefcase, Award, Layers, Globe2, Building } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
+import ServiceCard from "@/components/ui/ServiceCard";
+import { cardGridClass } from "@/components/ui/CardGrid";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import TextReveal from "@/components/motion/TextReveal";
@@ -89,62 +88,23 @@ export default function BusinessConsultancyPage() {
             subtitle="Designed to relieve business owners from complex regulatory formalities so you can focus entirely on commercial growth."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className={cardGridClass("editorial")}>
             {CONSULTANCY_SERVICES.map((service) => (
-              <Card
+              <ServiceCard
                 key={service.id}
                 brassAccent
-                className="flex flex-col justify-between h-full bg-white border-[#E8E2D8] hover:border-brass-400 p-8"
-              >
-                <div>
-                  <div className="relative h-48 w-full rounded-sm overflow-hidden mb-6 border border-cream-300">
-                    <ImageReveal className="w-full h-full">
-                      <Image
-                        src={service.image}
-                        alt={service.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                      />
-                    </ImageReveal>
-                  </div>
-
-                  <span className="text-xs font-bold text-maroon-800 uppercase tracking-widest block mb-1">
-                    Advisory Practice
-                  </span>
-                  <h3 className="font-serif text-2xl font-bold text-charcoal-950 mb-2">
-                    {service.title}
-                  </h3>
-                  <p className="text-xs text-brass-700 font-semibold uppercase tracking-wider mb-4">
-                    {service.tagline}
-                  </p>
-                  <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed mb-6">
-                    {service.shortDesc}
-                  </p>
-
-                  <div className="space-y-2 mb-8 border-t border-cream-200 pt-4">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-charcoal-400 block mb-1">
-                      Key Capabilities:
-                    </span>
-                    {service.offerings.slice(0, 5).map((offering, idx) => (
-                      <div key={idx} className="flex items-start gap-2 text-xs text-charcoal-700">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-maroon-800 shrink-0 mt-0.5" />
-                        <span>{offering}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <Button
-                  href={service.href}
-                  variant="primary"
-                  size="sm"
-                  fullWidth
-                  icon={<ArrowRight className="w-4 h-4" />}
-                >
-                  Explore {service.title}
-                </Button>
-              </Card>
+                image={service.image}
+                imageAlt={service.title}
+                chip="Advisory Practice"
+                chipVariant="maroon"
+                title={service.title}
+                tagline={service.tagline}
+                description={service.shortDesc}
+                features={service.offerings.slice(0, 5)}
+                featuresLabel="Key Capabilities"
+                featureIcon={<CheckCircle2 className="h-4 w-4 text-maroon-800" />}
+                primaryCta={{ href: service.href, label: "Explore Service" }}
+              />
             ))}
           </div>
         </div>

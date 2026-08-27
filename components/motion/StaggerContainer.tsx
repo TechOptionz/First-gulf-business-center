@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { useIsCompactViewport } from "@/lib/use-media-query";
 
 interface StaggerContainerProps {
   children: React.ReactNode;
@@ -55,16 +57,16 @@ interface StaggerItemProps {
 
 export function StaggerItem({ children, className = "" }: StaggerItemProps) {
   const shouldReduceMotion = useReducedMotion();
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsCompactViewport();
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsMobile(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 1024);
-    }
-  }, []);
+  // Grid items stretch to the row height, but that height only reaches an
+  // `h-full` card if every wrapper in between passes it down. `min-w-0` keeps
+  // the animation wrapper from widening its grid column.
+  const wrapperClass = cn("flex h-full min-w-0 flex-col", className);
+
 
   if (shouldReduceMotion) {
-    return <div className={className}>{children}</div>;
+    return <div className={wrapperClass}>{children}</div>;
   }
 
   const itemVariants = {
@@ -83,7 +85,7 @@ export function StaggerItem({ children, className = "" }: StaggerItemProps) {
   };
 
   return (
-    <motion.div variants={itemVariants} className={className}>
+    <motion.div variants={itemVariants} className={wrapperClass}>
       {children}
     </motion.div>
   );

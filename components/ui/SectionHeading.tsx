@@ -30,7 +30,7 @@ export default function SectionHeading({
       {eyebrow && (
         <div
           className={cn(
-            "inline-flex items-center gap-2 text-xs sm:text-sm font-bold tracking-[0.2em] uppercase mb-3.5",
+            "mb-3.5 inline-flex max-w-full flex-wrap items-center justify-center gap-2 text-sm font-bold uppercase leading-snug tracking-[0.2em]",
             dark ? "text-brass-300" : "text-maroon-800"
           )}
         >

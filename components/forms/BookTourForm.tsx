@@ -1,17 +1,39 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckCircle2, Calendar, Clock, Phone, Mail, User, Building, Users2, ArrowRight, Loader2 } from "lucide-react";
+import { CheckCircle2, Calendar, Clock, Phone, Mail, User, Building, Building2, Briefcase, Users2, ArrowRight, Loader2 } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { COMPANY_DETAILS } from "@/data/content";
 
 interface BookTourFormProps {
   defaultWorkspace?: string;
   className?: string;
 }
 
+const SERVICE_GROUPS = [
+  {
+    label: "Workspace",
+    icon: Building2,
+    options: [
+      { id: "coworking", label: "Coworking Space", desc: "Hot / Dedicated Desks" },
+      { id: "virtual-office", label: "Virtual Office", desc: "EJARI & Estidama" },
+      { id: "freezone-office", label: "Freezone Serviced Office", desc: "Private Executive Suite" },
+    ],
+  },
+  {
+    label: "Business Consultancy",
+    icon: Briefcase,
+    options: [
+      { id: "business-setup-pro", label: "Business Setup & PRO", desc: "Trade License, Visas & PRO" },
+      { id: "corporate-solutions", label: "Corporate Solutions", desc: "Admin, IT & Accounting" },
+      { id: "trademark-registration", label: "Trademark Registration", desc: "Brand & IP Protection" },
+    ],
+  },
+];
+
+const SERVICE_OPTIONS = SERVICE_GROUPS.flatMap((group) => group.options);
+
 export default function BookTourForm({
-  defaultWorkspace = "serviced-office",
+  defaultWorkspace = "coworking",
   className,
 }: BookTourFormProps) {
   const [workspace, setWorkspace] = useState(defaultWorkspace);
@@ -31,6 +53,8 @@ export default function BookTourForm({
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const selectedService = SERVICE_OPTIONS.find((option) => option.id === workspace);
 
   const validate = () => {
     const errs: Record<string, string> = {};
@@ -80,8 +104,8 @@ export default function BookTourForm({
             <span className="font-bold text-right">2nd Floor, Madina Mall, Office 2-20, Dubai</span>
           </div>
           <div className="flex justify-between border-b border-cream-300 pb-2">
-            <span className="text-charcoal-600 font-medium">Workspace:</span>
-            <span className="font-bold capitalize">{workspace.replace(/-/g, " ")}</span>
+            <span className="text-charcoal-600 font-medium">Service:</span>
+            <span className="font-bold text-right">{selectedService?.label ?? workspace.replace(/-/g, " ")}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-charcoal-600 font-medium">Contact:</span>
@@ -139,31 +163,40 @@ export default function BookTourForm({
         </p>
       </div>
 
-      {/* Workspace Type Selector */}
+      {/* Workspace / Service Selector */}
       <div className="mb-8">
         <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-3">
           Select Workspace or Service <span className="text-maroon-700">*</span>
         </label>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {[
-            { id: "coworking", label: "Coworking Space", desc: "Hot / Dedicated Desks" },
-            { id: "virtual-office", label: "Virtual Office", desc: "EJARI & Estidama" },
-            { id: "freezone-office", label: "Freezone Serviced Office", desc: "Private Executive Suite" },
-          ].map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => setWorkspace(item.id)}
-              className={`p-4 text-left border rounded-sm transition-all duration-200 cursor-pointer ${
-                workspace === item.id
-                  ? "border-maroon-800 bg-maroon-50/70 shadow-xs ring-2 ring-maroon-800"
-                  : "border-cream-300 hover:border-brass-400 bg-white"
-              }`}
-            >
-              <div className="font-bold text-base text-charcoal-950">{item.label}</div>
-              <div className="text-xs sm:text-sm text-charcoal-700 mt-1">{item.desc}</div>
-            </button>
-          ))}
+        <div className="space-y-5">
+          {SERVICE_GROUPS.map((group) => {
+            const GroupIcon = group.icon;
+            return (
+              <div key={group.label}>
+                <div className="mb-2.5 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-charcoal-600">
+                  <GroupIcon className="w-4 h-4 text-brass-700" />
+                  {group.label}
+                </div>
+                <div className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-3">
+                  {group.options.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => setWorkspace(item.id)}
+                      className={`flex min-h-[44px] min-w-0 flex-col rounded-sm border p-4 text-left transition-[border-color,box-shadow] duration-200 cursor-pointer ${
+                        workspace === item.id
+                          ? "border-maroon-800 bg-maroon-50/70 shadow-sm ring-2 ring-maroon-800"
+                          : "border-cream-300 hover:border-brass-400 bg-white"
+                      }`}
+                    >
+                      <div className="min-w-0 text-base font-bold leading-snug text-charcoal-950">{item.label}</div>
+                      <div className="mt-1 min-w-0 text-sm leading-snug text-charcoal-700">{item.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

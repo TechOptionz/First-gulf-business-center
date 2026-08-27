@@ -1,14 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
-  ArrowUpRight,
-  ShieldCheck,
-  Building,
-} from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Building } from "lucide-react";
 import Logo from "@/components/ui/Logo";
 import { COMPANY_DETAILS } from "@/data/content";
 
@@ -202,7 +194,7 @@ export default function Footer() {
                 </a>
                 <a
                   href={`mailto:${COMPANY_DETAILS.email}`}
-                  className="block text-cream-200 hover:text-brass-300 font-medium truncate"
+                  className="block min-w-0 font-medium text-cream-200 [overflow-wrap:anywhere] hover:text-brass-300"
                 >
                   ✉️ {COMPANY_DETAILS.email}
                 </a>

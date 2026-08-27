@@ -24,7 +24,7 @@ export default function Breadcrumbs({
     <nav
       aria-label="Breadcrumbs"
       className={cn(
-        "flex flex-wrap items-center space-x-2 gap-y-1.5 text-xs sm:text-sm font-semibold py-2.5 sm:py-3",
+        "flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1.5 py-2.5 text-sm font-semibold sm:py-3",
         onDark ? "text-cream-200" : "text-charcoal-700",
         className
       )}
@@ -57,7 +57,7 @@ export default function Breadcrumbs({
               <span
                 aria-current="page"
                 className={cn(
-                  "font-bold truncate",
+                  "min-w-0 break-words font-bold",
                   onDark ? "text-white" : "text-maroon-900"
                 )}
               >
@@ -67,7 +67,7 @@ export default function Breadcrumbs({
               <Link
                 href={item.href}
                 className={cn(
-                  "transition-colors truncate",
+                  "min-w-0 break-words transition-colors",
                   onDark ? "hover:text-white" : "hover:text-maroon-800"
                 )}
               >

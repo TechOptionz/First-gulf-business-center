@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface ButtonProps
@@ -11,6 +12,8 @@ export interface ButtonProps
   rel?: string;
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
+  /** Trailing arrow that nudges on hover. Shorthand for the common CTA. */
+  withArrow?: boolean;
   fullWidth?: boolean;
 }
 
@@ -23,6 +26,7 @@ export default function Button({
   rel,
   icon,
   iconPosition = "right",
+  withArrow = false,
   fullWidth = false,
   className,
   disabled,
@@ -30,19 +34,21 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center font-bold tracking-wider transition-all duration-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-700 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer group select-none";
+    // `min-h-[44px]` on every size keeps these usable as touch targets.
+    // The label wraps rather than truncating, so long CTA text stays readable.
+    "inline-flex items-center justify-center text-center font-bold tracking-wider leading-snug transition-[background-color,border-color,box-shadow,transform,color] duration-300 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-maroon-700 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer group/btn select-none min-w-0";
 
   const sizeStyles = {
-    sm: "px-4 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-wider gap-2 min-h-[42px]",
-    md: "px-6 py-3.5 text-sm sm:text-base font-bold tracking-wider uppercase gap-2.5 min-h-[48px]",
-    lg: "px-8 py-4.5 text-base sm:text-lg font-bold tracking-wider uppercase gap-3 min-h-[54px]",
+    sm: "px-4 py-2.5 text-[0.9375rem] font-bold uppercase tracking-wider gap-2 min-h-[44px]",
+    md: "px-6 py-3.5 text-base font-bold tracking-wider uppercase gap-2.5 min-h-[48px]",
+    lg: "px-8 py-4 text-base sm:text-lg font-bold tracking-wider uppercase gap-3 min-h-[54px]",
   };
 
   const variantStyles = {
     primary:
       "bg-maroon-800 text-white shadow-luxury hover:bg-maroon-900 hover:shadow-luxury-hover border border-maroon-700 active:translate-y-0.5",
     secondary:
-      "bg-cream-100 text-maroon-900 border-2 border-brass-400 hover:bg-cream-200 hover:border-brass-500 shadow-xs active:translate-y-0.5",
+      "bg-cream-100 text-maroon-900 border-2 border-brass-400 hover:bg-cream-200 hover:border-brass-500 shadow-sm active:translate-y-0.5",
     gold:
       "bg-brass-400 text-charcoal-950 font-bold hover:bg-brass-300 shadow-luxury hover:shadow-luxury-hover border border-brass-300 active:translate-y-0.5",
     dark:
@@ -61,17 +67,23 @@ export default function Button({
     className
   );
 
-  const iconElement = icon && (
-    <span className="transition-transform duration-300 group-hover:translate-x-0.5 shrink-0">
-      {icon}
+  const resolvedIcon =
+    icon ?? (withArrow ? <ArrowRight className="h-4 w-4" /> : null);
+
+  const iconElement = resolvedIcon && (
+    <span
+      aria-hidden="true"
+      className="shrink-0 transition-transform duration-300 group-hover/btn:translate-x-0.5"
+    >
+      {resolvedIcon}
     </span>
   );
 
   const content = (
     <>
-      {icon && iconPosition === "left" && iconElement}
-      <span className="truncate">{children}</span>
-      {icon && iconPosition === "right" && iconElement}
+      {resolvedIcon && iconPosition === "left" && iconElement}
+      <span className="min-w-0 text-balance">{children}</span>
+      {resolvedIcon && iconPosition === "right" && iconElement}
     </>
   );
 

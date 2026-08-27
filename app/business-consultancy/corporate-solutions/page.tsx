@@ -1,10 +1,11 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { CheckCircle2, Layers, Cpu, Users, PhoneCall, ShieldCheck, ArrowRight } from "lucide-react";
+import { Layers, Cpu, PhoneCall, ShieldCheck } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
+import FeatureCard from "@/components/ui/FeatureCard";
+import { cardGridClass } from "@/components/ui/CardGrid";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import TextReveal from "@/components/motion/TextReveal";
@@ -17,6 +18,33 @@ export const metadata: Metadata = {
   description:
     "Customizable corporate management solutions, 24/7 IT infrastructure support, and administrative services in Dubai for foreign firms and local enterprises.",
 };
+
+const CORPORATE_SOLUTIONS = [
+  {
+    icon: <Layers className="h-6 w-6" />,
+    title: "Custom Office Management",
+    description:
+      "Full-scope facility management, dedicated workspaces, ergonomic interior adjustments, and supplies coordination.",
+  },
+  {
+    icon: <Cpu className="h-6 w-6" />,
+    title: "Comprehensive 24/7 IT Support",
+    description:
+      "On-site and remote IT troubleshooting, enterprise network security, cloud backup configuration, and dedicated server rack management.",
+  },
+  {
+    icon: <PhoneCall className="h-6 w-6" />,
+    title: "Administrative Concierge",
+    description:
+      "Multilingual telephone answering, visitor greeting, executive boardroom scheduling, and courier dispatch management.",
+  },
+  {
+    icon: <ShieldCheck className="h-6 w-6" />,
+    title: "Governance & Compliance",
+    description:
+      "Ongoing trade license maintenance, annual audit coordination, ESR & UBO compliance filings, and corporate legal guidance.",
+  },
+];
 
 export default function CorporateSolutionsPage() {
   return (
@@ -91,54 +119,17 @@ export default function CorporateSolutionsPage() {
             subtitle="Customizable service packages that keep your Dubai operations smooth, secure, and fully compliant around the clock."
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card brassAccent className="p-6 bg-white border-[#E8E2D8]">
-              <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 mb-5">
-                <Layers className="w-6 h-6" />
-              </div>
-              <h3 className="font-serif text-lg font-bold text-charcoal-950 mb-2">
-                Custom Office Management
-              </h3>
-              <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed">
-                Full-scope facility management, dedicated workspaces, ergonomic interior adjustments, and supplies coordination.
-              </p>
-            </Card>
-
-            <Card brassAccent className="p-6 bg-white border-[#E8E2D8]">
-              <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 mb-5">
-                <Cpu className="w-6 h-6" />
-              </div>
-              <h3 className="font-serif text-lg font-bold text-charcoal-950 mb-2">
-                Comprehensive 24/7 IT Support
-              </h3>
-              <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed">
-                On-site and remote IT troubleshooting, enterprise network security, cloud backup configuration, and dedicated server rack management.
-              </p>
-            </Card>
-
-            <Card brassAccent className="p-6 bg-white border-[#E8E2D8]">
-              <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 mb-5">
-                <PhoneCall className="w-6 h-6" />
-              </div>
-              <h3 className="font-serif text-lg font-bold text-charcoal-950 mb-2">
-                Administrative Concierge
-              </h3>
-              <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed">
-                Multilingual telephone answering, visitor greeting, executive boardroom scheduling, and courier dispatch management.
-              </p>
-            </Card>
-
-            <Card brassAccent className="p-6 bg-white border-[#E8E2D8]">
-              <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 mb-5">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <h3 className="font-serif text-lg font-bold text-charcoal-950 mb-2">
-                Governance & Compliance
-              </h3>
-              <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed">
-                Ongoing trade license maintenance, annual audit coordination, ESR & UBO compliance filings, and corporate legal guidance.
-              </p>
-            </Card>
+          <div className={cardGridClass("compact")}>
+            {CORPORATE_SOLUTIONS.map((solution) => (
+              <FeatureCard
+                key={solution.title}
+                brassAccent
+                size="compact"
+                icon={solution.icon}
+                title={solution.title}
+                description={solution.description}
+              />
+            ))}
           </div>
         </div>
       </section>

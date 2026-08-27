@@ -1,10 +1,10 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Phone, Mail, MapPin, Clock, MessageSquare, ExternalLink, ShieldCheck } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
+import FeatureCard from "@/components/ui/FeatureCard";
+import { cardGridClass } from "@/components/ui/CardGrid";
 import Button from "@/components/ui/Button";
 import TextReveal from "@/components/motion/TextReveal";
 import FadeUp from "@/components/motion/FadeUp";
@@ -46,7 +46,7 @@ export default function ContactPage() {
 
           <div className="max-w-3xl">
             <FadeUp delay={0.15} distance={15}>
-              <span className="text-xs sm:text-sm font-bold tracking-[0.2em] text-brass-400 uppercase block mb-3">
+              <span className="mb-3 block text-sm font-bold uppercase tracking-[0.2em] text-brass-400">
                 Executive Concierge Desk
               </span>
             </FadeUp>
@@ -88,95 +88,82 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             {/* Left Column: Direct Info Cards */}
-            <div className="lg:col-span-5 space-y-6">
-              <Card brassAccent className="bg-white border-[#E2DAD0] p-6 sm:p-8">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 shrink-0">
-                    <Phone className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-serif text-xl font-bold text-charcoal-950 mb-1">
-                      Direct Phone Lines
-                    </h3>
-                    <p className="text-sm text-charcoal-700 mb-3 font-medium">
-                      Call our concierge for immediate leasing availability.
-                    </p>
-                    <div className="space-y-1.5">
-                      <a
-                        href={`tel:${COMPANY_DETAILS.phonePrimaryTel}`}
-                        className="block text-base sm:text-lg font-bold text-maroon-900 hover:underline"
-                      >
-                        📞 {COMPANY_DETAILS.phonePrimary}
-                      </a>
-                      <a
-                        href={`tel:${COMPANY_DETAILS.phoneSecondaryTel}`}
-                        className="block text-sm sm:text-base font-semibold text-charcoal-800 hover:text-maroon-800"
-                      >
-                        ☎️ {COMPANY_DETAILS.phoneSecondary}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-
-              <Card brassAccent className="bg-white border-[#E2DAD0] p-6 sm:p-8">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 shrink-0">
-                    <Mail className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-serif text-xl font-bold text-charcoal-950 mb-1">
-                      Email Inquiries
-                    </h3>
-                    <p className="text-sm text-charcoal-700 mb-3 font-medium">
-                      Send proposals, RFP documents, or setup inquiries.
-                    </p>
+            <div className="lg:col-span-5">
+              <div className={cardGridClass("stack")}>
+                <FeatureCard
+                  layout="horizontal"
+                  size="compact"
+                  brassAccent
+                  icon={<Phone className="h-6 w-6" />}
+                  title="Direct Phone Lines"
+                  description="Call our concierge for immediate leasing availability."
+                >
+                  <div className="flex flex-col">
                     <a
-                      href={`mailto:${COMPANY_DETAILS.email}`}
-                      className="text-sm sm:text-base font-bold text-maroon-900 hover:underline break-all"
+                      href={`tel:${COMPANY_DETAILS.phonePrimaryTel}`}
+                      className="inline-flex min-h-[44px] w-full min-w-0 items-center break-words text-base font-bold text-maroon-900 hover:underline sm:text-lg"
                     >
-                      ✉️ {COMPANY_DETAILS.email}
+                      📞 {COMPANY_DETAILS.phonePrimary}
+                    </a>
+                    <a
+                      href={`tel:${COMPANY_DETAILS.phoneSecondaryTel}`}
+                      className="inline-flex min-h-[44px] w-full min-w-0 items-center break-words text-[0.9375rem] font-semibold text-charcoal-800 hover:text-maroon-800 sm:text-base"
+                    >
+                      ☎️ {COMPANY_DETAILS.phoneSecondary}
                     </a>
                   </div>
-                </div>
-              </Card>
+                </FeatureCard>
 
-              <Card brassAccent className="bg-white border-[#E2DAD0] p-6 sm:p-8">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-sm bg-maroon-50 border border-maroon-200 flex items-center justify-center text-maroon-800 shrink-0">
-                    <MapPin className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-serif text-xl font-bold text-charcoal-950 mb-1">
-                      Headquarters Address
-                    </h3>
-                    <p className="text-sm sm:text-base text-charcoal-800 leading-relaxed mb-2 font-medium">
-                      2nd Floor, Madina Mall, Offices 2–20, Al Muhaisnah 4, Dubai, United Arab Emirates
-                    </p>
-                    <p className="text-sm text-charcoal-700 font-semibold">
-                      P.O. Box: {COMPANY_DETAILS.poBox}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-
-              <div className="p-5 bg-maroon-900 text-white rounded-sm border border-brass-400/50 flex items-center justify-between">
-                <div>
-                  <div className="text-sm font-bold font-serif text-brass-300">
-                    Instant WhatsApp Support
-                  </div>
-                  <div className="text-xs sm:text-sm text-cream-200 font-medium">
-                    Chat with senior workspace management
-                  </div>
-                </div>
-                <Button
-                  href={COMPANY_DETAILS.socials.whatsapp}
-                  target="_blank"
-                  variant="gold"
-                  size="sm"
+                <FeatureCard
+                  layout="horizontal"
+                  size="compact"
+                  brassAccent
+                  icon={<Mail className="h-6 w-6" />}
+                  title="Email Inquiries"
+                  description="Send proposals, RFP documents, or setup inquiries."
                 >
-                  WhatsApp Now
-                </Button>
+                  {/* `overflow-wrap: anywhere` is used here only because an
+                      email address has no natural break opportunity at 320px. */}
+                  <a
+                    href={`mailto:${COMPANY_DETAILS.email}`}
+                    className="inline-flex min-h-[44px] w-full min-w-0 items-center text-[0.9375rem] font-bold text-maroon-900 [overflow-wrap:anywhere] hover:underline sm:text-base"
+                  >
+                    ✉️ {COMPANY_DETAILS.email}
+                  </a>
+                </FeatureCard>
+
+                <FeatureCard
+                  layout="horizontal"
+                  size="compact"
+                  brassAccent
+                  icon={<MapPin className="h-6 w-6" />}
+                  title="Headquarters Address"
+                  description="2nd Floor, Madina Mall, Offices 2–20, Al Muhaisnah 4, Dubai, United Arab Emirates"
+                >
+                  <p className="text-sm font-semibold text-charcoal-700">
+                    P.O. Box: {COMPANY_DETAILS.poBox}
+                  </p>
+                </FeatureCard>
+
+                <div className="flex flex-col items-start gap-4 rounded-sm border border-brass-400/50 bg-maroon-900 p-5 text-white sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <p className="font-serif text-base font-bold text-brass-300">
+                      Instant WhatsApp Support
+                    </p>
+                    <p className="mt-0.5 text-sm font-medium text-cream-200">
+                      Chat with senior workspace management
+                    </p>
+                  </div>
+                  <Button
+                    href={COMPANY_DETAILS.socials.whatsapp}
+                    target="_blank"
+                    variant="gold"
+                    size="sm"
+                    className="w-full sm:w-auto sm:shrink-0"
+                  >
+                    WhatsApp Now
+                  </Button>
+                </div>
               </div>
             </div>
 
