@@ -292,7 +292,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="fixed inset-0 bg-charcoal-950/70 backdrop-blur-sm"
+              className="fixed inset-0 bg-charcoal-950/75 backdrop-blur-sm"
               onClick={() => setMobileMenuOpen(false)}
             />
 
@@ -301,39 +301,45 @@ export default function Navbar() {
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              transition={{ type: "spring", stiffness: 320, damping: 32 }}
               className="relative ml-auto w-full max-w-sm bg-white h-full shadow-2xl flex flex-col z-50 overflow-y-auto border-l border-brass-300"
             >
               {/* Drawer Header */}
-              <div className="p-4 border-b border-cream-200 flex items-center justify-between bg-cream-50">
-                <Logo width={160} height={55} />
+              <div className="p-4 border-b border-cream-200 flex items-center justify-between bg-cream-50/80 backdrop-blur-sm">
+                <Logo width={160} height={55} priority />
                 <button
                   type="button"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 text-charcoal-900 hover:text-maroon-800 rounded-sm"
-                  aria-label="Close menu"
+                  className="w-10 h-10 rounded-full bg-cream-100 border border-cream-300 text-charcoal-900 hover:bg-maroon-800 hover:text-white transition-colors flex items-center justify-center cursor-pointer"
+                  aria-label="Close navigation menu"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Quick Contact Header inside Drawer */}
-              <div className="p-3.5 bg-maroon-900 text-white text-sm flex items-center justify-between font-medium">
+              {/* Quick Contact Header Banner inside Drawer */}
+              <div className="py-3 px-4 bg-maroon-950 text-white text-xs flex items-center justify-between border-b border-maroon-800 font-medium">
                 <a
                   href={`tel:${COMPANY_DETAILS.phonePrimaryTel}`}
-                  className="flex items-center gap-2 text-brass-300 font-bold"
+                  className="flex items-center gap-2 text-brass-300 font-bold hover:text-white transition-colors"
                 >
-                  <Phone className="w-4 h-4 text-brass-300" />
+                  <Phone className="w-3.5 h-3.5 text-brass-400" />
                   <span>{COMPANY_DETAILS.phonePrimary}</span>
                 </a>
-                <span className="text-xs text-cream-200 font-semibold">Madina Mall, Dubai</span>
+                <span className="flex items-center gap-1 text-cream-200 font-semibold">
+                  <MapPin className="w-3.5 h-3.5 text-brass-400" />
+                  Madina Mall, Dubai
+                </span>
               </div>
 
               {/* Nav Items List */}
-              <div className="p-4 space-y-2.5 flex-1">
+              <div className="p-4 space-y-3 flex-1 overflow-y-auto bg-cream-50/40">
                 {NAVIGATION_LINKS.map((link) => {
                   const hasChildren = link.children && link.children.length > 0;
                   const isExpanded = mobileExpanded[link.name];
+                  const isActive =
+                    pathname === link.href ||
+                    (hasChildren && pathname.startsWith(link.href) && link.href !== "/");
 
                   if (!hasChildren) {
                     return (
@@ -341,35 +347,57 @@ export default function Navbar() {
                         key={link.name}
                         href={link.href}
                         className={cn(
-                          "block px-4 py-3.5 text-lg font-serif font-bold uppercase rounded-sm border transition-colors",
-                          pathname === link.href
-                            ? "bg-maroon-50 text-maroon-900 border-maroon-300"
-                            : "text-charcoal-950 border-transparent hover:bg-cream-100"
+                          "flex min-h-[52px] items-center gap-3.5 px-4 py-3 rounded-sm border text-base font-bold tracking-wide uppercase transition-all duration-200",
+                          isActive
+                            ? "bg-maroon-50/90 text-maroon-900 border-maroon-300 border-l-4 border-l-maroon-800 shadow-sm"
+                            : "bg-white text-charcoal-950 border-cream-300 hover:border-brass-400 hover:bg-cream-100"
                         )}
                       >
-                        {link.name}
+                        <div className="w-8 h-8 rounded-sm bg-cream-100 flex items-center justify-center shrink-0 border border-cream-300">
+                          {getSubmenuIcon(link.href)}
+                        </div>
+                        <span className="min-w-0 flex-1">{link.name}</span>
                       </Link>
                     );
                   }
 
                   return (
-                    <div key={link.name} className="border border-cream-200 rounded-sm overflow-hidden">
-                      <div className="flex items-center justify-between bg-cream-50 pr-2">
+                    <div
+                      key={link.name}
+                      className={cn(
+                        "rounded-sm border overflow-hidden transition-all duration-200",
+                        isActive ? "border-maroon-300 bg-white" : "border-cream-300 bg-white"
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "flex min-h-[52px] items-center justify-between p-3.5 transition-colors cursor-pointer",
+                          isActive ? "bg-maroon-50/80 border-l-4 border-l-maroon-800" : "bg-white hover:bg-cream-50"
+                        )}
+                        onClick={() => toggleMobileSubmenu(link.name)}
+                      >
                         <Link
                           href={link.href}
-                          className="flex-1 px-4 py-3.5 text-lg font-serif font-bold uppercase text-charcoal-950 hover:text-maroon-800"
+                          className="flex min-h-[44px] items-center gap-3.5 flex-1 text-base font-bold tracking-wide uppercase text-charcoal-950 hover:text-maroon-800"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          {link.name}
+                          <div className="w-8 h-8 rounded-sm bg-cream-100 flex items-center justify-center shrink-0 border border-cream-300">
+                            {getSubmenuIcon(link.href)}
+                          </div>
+                          <span>{link.name}</span>
                         </Link>
                         <button
                           type="button"
-                          onClick={() => toggleMobileSubmenu(link.name)}
-                          className="p-2.5 text-charcoal-700 hover:text-maroon-800"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleMobileSubmenu(link.name);
+                          }}
+                          className="w-9 h-9 rounded-sm bg-cream-100 flex items-center justify-center text-brass-700 hover:bg-maroon-800 hover:text-white transition-colors"
                           aria-label={`Toggle ${link.name} sub-menu`}
                         >
                           <ChevronDown
                             className={cn(
-                              "w-5 h-5 transition-transform duration-200 text-brass-700",
+                              "w-5 h-5 transition-transform duration-200",
                               isExpanded && "rotate-180"
                             )}
                           />
@@ -377,23 +405,30 @@ export default function Navbar() {
                       </div>
 
                       {isExpanded && (
-                        <div className="p-2.5 bg-white space-y-2 border-t border-cream-200">
+                        <div className="p-3 bg-cream-50/60 space-y-2 border-t border-cream-200">
                           {link.children?.map((subItem) => (
                             <Link
                               key={subItem.name}
                               href={subItem.href}
-                              className="flex min-h-[44px] min-w-0 items-start gap-3 rounded-sm p-3 text-left hover:bg-cream-100"
+                              className="flex min-h-[48px] items-start gap-3 rounded-sm p-3 bg-white border border-cream-200 hover:border-brass-400 hover:bg-cream-100 transition-colors group"
                             >
-                              <div className="w-7 h-7 rounded-sm bg-maroon-50 flex items-center justify-center shrink-0 mt-0.5">
+                              <div className="w-7 h-7 rounded-sm bg-maroon-50 flex items-center justify-center shrink-0 mt-0.5 border border-maroon-200 group-hover:bg-maroon-800 group-hover:text-white transition-colors">
                                 {getSubmenuIcon(subItem.href)}
                               </div>
                               <div className="min-w-0 flex-1">
-                                <div className="min-w-0 text-[0.9375rem] font-bold leading-snug text-charcoal-950">
-                                  {subItem.name}
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="font-serif text-base font-bold text-charcoal-950 group-hover:text-maroon-800 transition-colors">
+                                    {subItem.name}
+                                  </span>
+                                  {subItem.badge && (
+                                    <span className="text-[0.6875rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm bg-brass-100 border border-brass-300 text-brass-900 shrink-0">
+                                      {subItem.badge}
+                                    </span>
+                                  )}
                                 </div>
-                                <div className="mt-0.5 min-w-0 text-sm font-normal leading-snug text-charcoal-700">
+                                <p className="mt-1 text-xs text-charcoal-700 font-normal leading-relaxed">
                                   {subItem.description}
-                                </div>
+                                </p>
                               </div>
                             </Link>
                           ))}
@@ -405,13 +440,14 @@ export default function Navbar() {
               </div>
 
               {/* Drawer Footer CTAs */}
-              <div className="p-4 border-t border-cream-200 bg-cream-50 space-y-3">
+              <div className="p-4 border-t border-cream-200 bg-white space-y-3">
                 <Button
                   href="/book-a-tour"
                   variant="primary"
                   size="md"
                   fullWidth
                   icon={<Calendar className="w-4 h-4" />}
+                  className="font-bold py-3 text-sm tracking-wide uppercase shadow-sm"
                 >
                   Schedule Tour
                 </Button>
@@ -421,6 +457,7 @@ export default function Navbar() {
                   variant="gold"
                   size="md"
                   fullWidth
+                  className="font-bold py-3 text-sm tracking-wide uppercase shadow-sm"
                 >
                   Chat on WhatsApp
                 </Button>
