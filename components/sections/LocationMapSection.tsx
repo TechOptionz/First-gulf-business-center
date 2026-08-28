@@ -2,6 +2,7 @@
 
 import React from "react";
 import { MapPin, Clock, Car, ExternalLink } from "lucide-react";
+import DeferredMapEmbed from "@/components/sections/DeferredMapEmbed";
 import Button from "@/components/ui/Button";
 import FadeUp from "@/components/motion/FadeUp";
 import { COMPANY_DETAILS } from "@/data/content";
@@ -100,7 +101,7 @@ export default function LocationMapSection() {
           <div className="lg:col-span-7">
             <FadeUp distance={30}>
               <div className="relative rounded-sm overflow-hidden border-2 border-[#E2DAD0] shadow-card bg-cream-50 h-[420px] sm:h-[480px]">
-                <iframe
+                <DeferredMapEmbed
                   title="First Gulf Business Center Location Map"
                   src="https://maps.google.com/maps?q=First%20Gulf%20Business%20Center%20L.L.C%2C%20Madina%20Mall%2C%20Dubai&t=&z=15&ie=UTF8&iwloc=&output=embed"
                   width="100%"

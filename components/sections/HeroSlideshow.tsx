@@ -35,6 +35,12 @@ const HERO_SLIDES = [
 
 export default function HeroSlideshow() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  // The first slide is the LCP element. framer-motion serialises `initial` into
+  // the SSR markup, so an `opacity: 0` start ships the hero photo already
+  // downloaded but invisible until hydration finishes. Tracking whether the
+  // deck has moved yet lets slide 0 render opaque on the server while every
+  // later transition keeps its cross-fade.
+  const [hasChangedSlide, setHasChangedSlide] = useState(false);
   const [isInView, setIsInView] = useState(true);
   const [isTabVisible, setIsTabVisible] = useState(true);
   const isMobile = useIsCompactViewport();
@@ -42,11 +48,18 @@ export default function HeroSlideshow() {
   const shouldReduceMotion = useReducedMotion();
 
   const nextSlide = useCallback(() => {
+    setHasChangedSlide(true);
     setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
   }, []);
 
   const prevSlide = useCallback(() => {
+    setHasChangedSlide(true);
     setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+  }, []);
+
+  const goToSlide = useCallback((index: number) => {
+    setHasChangedSlide(true);
+    setCurrentSlide(index);
   }, []);
 
 
@@ -98,6 +111,10 @@ export default function HeroSlideshow() {
     }
   };
 
+  // Only the untouched first slide skips the fade-in; once the deck has moved,
+  // slide 0 cross-fades back in like every other slide.
+  const isFirstPaint = currentSlide === 0 && !hasChangedSlide;
+
   return (
     <div
       ref={containerRef}
@@ -110,7 +127,13 @@ export default function HeroSlideshow() {
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.1}
           onDragEnd={handleDragEnd}
-          initial={shouldReduceMotion ? { opacity: 0.9, scale: 1.0 } : { opacity: 0, scale: 1.0 }}
+          initial={
+            isFirstPaint
+              ? { opacity: 1, scale: 1.0 }
+              : shouldReduceMotion
+              ? { opacity: 0.9, scale: 1.0 }
+              : { opacity: 0, scale: 1.0 }
+          }
           animate={{ opacity: 1, scale: 1.10 }}
           exit={{ opacity: 0, scale: 1.12 }}
           transition={{
@@ -140,7 +163,7 @@ export default function HeroSlideshow() {
           <button
             key={slide.id}
             type="button"
-            onClick={() => setCurrentSlide(idx)}
+            onClick={() => goToSlide(idx)}
             aria-label={`Go to slide ${idx + 1}`}
             className={`transition-all duration-300 rounded-full cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center`}
           >
