@@ -19,7 +19,7 @@ export default function HeroSection() {
   return (
     <section
       aria-label="First Gulf Business Center Executive Workspace Overview"
-      className="relative min-h-[85dvh] lg:min-h-[92vh] flex items-center bg-charcoal-950 text-white overflow-hidden"
+      className="relative min-h-[85dvh] lg:min-h-[92dvh] flex items-center bg-charcoal-950 text-white overflow-hidden"
     >
       {/* Background Continuous Image Slideshow Layer (Isolated Client Component) */}
       <HeroSlideshow />

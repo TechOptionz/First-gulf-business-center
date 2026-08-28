@@ -142,7 +142,7 @@ export default function HeroSlideshow() {
             type="button"
             onClick={() => setCurrentSlide(idx)}
             aria-label={`Go to slide ${idx + 1}`}
-            className={`transition-all duration-300 rounded-full cursor-pointer min-h-[32px] min-w-[32px] flex items-center justify-center`}
+            className={`transition-all duration-300 rounded-full cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center`}
           >
             <span
               className={`block rounded-full transition-all duration-300 ${

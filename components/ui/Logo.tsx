@@ -28,13 +28,17 @@ export default function Logo({
       : "/logo.png";
 
   const content = (
-    <div className={cn("relative inline-flex items-center select-none", className)}>
+    <div
+      className={cn("relative inline-flex items-center select-none shrink-0 max-w-full", className)}
+      style={className ? undefined : { width: `${width}px` }}
+    >
       <Image
         src={logoSrc}
         alt="First Gulf Business Center L.L.C"
         width={width}
         height={height}
-        className="h-auto w-auto object-contain transition-transform duration-300 hover:scale-[1.02]"
+        className="h-auto w-full max-w-full object-contain transition-transform duration-300 hover:scale-[1.02]"
+        style={{ height: "auto" }}
         priority={priority}
       />
     </div>
@@ -42,7 +46,7 @@ export default function Logo({
 
   if (href) {
     return (
-      <Link href={href} aria-label="First Gulf Business Center Home">
+      <Link href={href} aria-label="First Gulf Business Center Home" className="inline-flex shrink-0 items-center max-w-full">
         {content}
       </Link>
     );

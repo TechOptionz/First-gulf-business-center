@@ -110,19 +110,19 @@ export default function Navbar() {
 
       {/* Main Sticky Header */}
       <header className="sticky top-0 z-50 bg-white/98 backdrop-blur-md shadow-sm py-3 border-b border-[#E2DAD0] w-full">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Brand Logo */}
-          <div className="mr-2 shrink-0 lg:mr-4 xl:mr-8">
+          <div className="shrink-0 mr-2 lg:mr-4 xl:mr-6">
             <Logo
-              width={180}
-              height={62}
+              width={200}
+              height={70}
               priority
-              className="w-[150px] transition-opacity duration-200 lg:w-[160px] xl:w-[180px]"
+              className="w-[150px] sm:w-[170px] lg:w-[190px] xl:w-[210px] transition-opacity duration-200"
             />
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden min-w-0 flex-1 items-center justify-end gap-0.5 lg:flex xl:gap-1.5 2xl:gap-2">
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex xl:gap-2 2xl:gap-3 px-2">
             {NAVIGATION_LINKS.map((link) => {
               const hasChildren = link.children && link.children.length > 0;
               const isActive =
@@ -135,7 +135,7 @@ export default function Navbar() {
                     key={link.name}
                     href={link.href}
                     className={cn(
-                      "relative shrink-0 rounded-sm px-2 py-2 text-[0.8125rem] font-bold uppercase tracking-wide whitespace-nowrap transition-colors xl:px-3 xl:text-sm 2xl:text-base",
+                      "relative shrink-0 rounded-sm px-2 py-1.5 text-[0.75rem] font-bold uppercase tracking-wider whitespace-nowrap transition-colors xl:px-2.5 xl:py-2 xl:text-xs 2xl:text-sm",
                       isActive
                         ? "text-maroon-900 bg-maroon-50/90"
                         : "text-charcoal-900 hover:text-maroon-800 hover:bg-cream-100"
@@ -163,7 +163,7 @@ export default function Navbar() {
                   <Link
                     href={link.href}
                     className={cn(
-                      "relative inline-flex shrink-0 items-center gap-1 rounded-sm px-2 py-2 text-[0.8125rem] font-bold uppercase tracking-wide whitespace-nowrap transition-colors xl:gap-1.5 xl:px-3 xl:text-sm 2xl:text-base",
+                      "relative inline-flex shrink-0 items-center gap-1 rounded-sm px-2 py-1.5 text-[0.75rem] font-bold uppercase tracking-wider whitespace-nowrap transition-colors xl:gap-1.5 xl:px-2.5 xl:py-2 xl:text-xs 2xl:text-sm",
                       isActive
                         ? "text-maroon-900 bg-maroon-50/90"
                         : "text-charcoal-900 hover:text-maroon-800 hover:bg-cream-100"
