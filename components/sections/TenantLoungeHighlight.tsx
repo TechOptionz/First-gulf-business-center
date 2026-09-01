@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Coffee, Sparkles, Users, ArrowRight } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
@@ -10,6 +11,11 @@ import ParallaxImage from "@/components/motion/ParallaxImage";
 import MagneticButton from "@/components/motion/MagneticButton";
 
 export default function TenantLoungeHighlight() {
+  // This section is reused across five pages and its CTA points at
+  // /book-a-tour. On that page the button is a link to itself and the
+  // supporting line has nothing to support, so drop the whole row.
+  const isOnTourPage = usePathname() === "/book-a-tour";
+
   return (
     <section className="py-20 lg:py-28 bg-charcoal-950 text-white relative overflow-hidden">
       <div className="absolute top-1/2 right-1/4 w-[500px] h-[500px] bg-maroon-800/25 rounded-full blur-3xl pointer-events-none" />
@@ -112,21 +118,23 @@ export default function TenantLoungeHighlight() {
               </FadeUp>
             </div>
 
-            <FadeUp delay={0.7} className="pt-4 flex items-center gap-4">
-              <MagneticButton>
-                <Button
-                  href="/book-a-tour"
-                  variant="gold"
-                  size="md"
-                  icon={<ArrowRight className="w-4 h-4" />}
-                >
-                  Experience the Lounge
-                </Button>
-              </MagneticButton>
-              <span className="text-sm text-cream-200 font-medium italic">
-                Free 100% access for all tenants
-              </span>
-            </FadeUp>
+            {!isOnTourPage && (
+              <FadeUp delay={0.7} className="pt-4 flex items-center gap-4">
+                <MagneticButton>
+                  <Button
+                    href="/book-a-tour"
+                    variant="gold"
+                    size="md"
+                    icon={<ArrowRight className="w-4 h-4" />}
+                  >
+                    Experience the Lounge
+                  </Button>
+                </MagneticButton>
+                <span className="text-sm text-cream-200 font-medium italic">
+                  Free 100% access for all tenants
+                </span>
+              </FadeUp>
+            )}
           </div>
         </div>
       </div>
