@@ -7,6 +7,7 @@ import FloatingContact from "@/components/layout/FloatingContact";
 import ScrollProgress from "@/components/motion/ScrollProgress";
 import PageTransition from "@/components/motion/PageTransition";
 import { COMPANY_DETAILS } from "@/data/content";
+import { Analytics } from "@vercel/analytics/next";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -148,6 +149,7 @@ export default function RootLayout({
         </main>
         <Footer />
         <FloatingContact />
+        <Analytics />
       </body>
     </html>
   );
