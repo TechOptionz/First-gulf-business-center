@@ -3,6 +3,21 @@
 import React, { useState } from "react";
 import { CheckCircle2, Calendar, Clock, Phone, Mail, User, Building, Building2, Briefcase, Users2, ArrowRight, Loader2 } from "lucide-react";
 import Button from "@/components/ui/Button";
+import {
+  validateCompany,
+  validateEmail,
+  validateName,
+  validatePhone,
+  validateTourDate,
+} from "@/lib/validation";
+
+const FIELD_VALIDATORS: Record<string, (value: string) => string> = {
+  name: validateName,
+  email: validateEmail,
+  phone: validatePhone,
+  company: validateCompany,
+  date: validateTourDate,
+};
 
 interface BookTourFormProps {
   defaultWorkspace?: string;
@@ -53,17 +68,35 @@ export default function BookTourForm({
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const selectedService = SERVICE_OPTIONS.find((option) => option.id === workspace);
 
+  const handleFieldChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    // Live feedback once the field has been visited: errors clear as the
+    // user fixes them and reappear if the value becomes invalid again.
+    if (touched[field] && FIELD_VALIDATORS[field]) {
+      setErrors((prev) => ({ ...prev, [field]: FIELD_VALIDATORS[field](value) }));
+    }
+  };
+
+  const handleFieldBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    if (FIELD_VALIDATORS[field]) {
+      setErrors((prev) => ({
+        ...prev,
+        [field]: FIELD_VALIDATORS[field](formData[field as keyof typeof formData] as string),
+      }));
+    }
+  };
+
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!formData.name.trim()) errs.name = "Please enter your full name";
-    if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email))
-      errs.email = "Please enter a valid email address";
-    if (!formData.phone.trim())
-      errs.phone = "Please enter your phone or WhatsApp number";
-    if (!formData.date) errs.date = "Please select a preferred date";
+    for (const [field, validator] of Object.entries(FIELD_VALIDATORS)) {
+      const message = validator(formData[field as keyof typeof formData] as string);
+      if (message) errs[field] = message;
+    }
     return errs;
   };
 
@@ -72,6 +105,7 @@ export default function BookTourForm({
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
+      setTouched({ name: true, email: true, phone: true, company: true, date: true });
       return;
     }
 
@@ -129,6 +163,8 @@ export default function BookTourForm({
             size="md"
             onClick={() => {
               setSubmitted(false);
+              setErrors({});
+              setTouched({});
               setFormData({
                 name: "",
                 email: "",
@@ -152,6 +188,7 @@ export default function BookTourForm({
   return (
     <form
       onSubmit={handleSubmit}
+      noValidate
       className={`bg-white border border-[#E2DAD0] p-6 sm:p-10 rounded-sm shadow-card ${className || ""}`}
     >
       <div className="border-b border-cream-200 pb-6 mb-8">
@@ -235,9 +272,13 @@ export default function BookTourForm({
             <input
               type="text"
               required
+              maxLength={60}
+              autoComplete="name"
               placeholder="e.g. Tariq Mansoor"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => handleFieldChange("name", e.target.value)}
+              onBlur={() => handleFieldBlur("name")}
+              aria-invalid={!!errors.name}
               className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                 errors.name ? "border-red-600" : "border-[#E2DAD0]"
               }`}
@@ -256,9 +297,13 @@ export default function BookTourForm({
             <input
               type="email"
               required
+              maxLength={100}
+              autoComplete="email"
               placeholder="tariq@company.ae"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) => handleFieldChange("email", e.target.value)}
+              onBlur={() => handleFieldBlur("email")}
+              aria-invalid={!!errors.email}
               className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                 errors.email ? "border-red-600" : "border-[#E2DAD0]"
               }`}
@@ -277,9 +322,14 @@ export default function BookTourForm({
             <input
               type="tel"
               required
+              maxLength={20}
+              autoComplete="tel"
+              inputMode="tel"
               placeholder="+971 50 000 0000"
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e) => handleFieldChange("phone", e.target.value)}
+              onBlur={() => handleFieldBlur("phone")}
+              aria-invalid={!!errors.phone}
               className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                 errors.phone ? "border-red-600" : "border-[#E2DAD0]"
               }`}
@@ -297,12 +347,19 @@ export default function BookTourForm({
             <Building className="w-5 h-5 text-charcoal-500 absolute left-3.5 top-3.5 pointer-events-none" />
             <input
               type="text"
+              maxLength={80}
+              autoComplete="organization"
               placeholder="e.g. Al Mansoor Holding"
               value={formData.company}
-              onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-              className="w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border border-[#E2DAD0] rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all"
+              onChange={(e) => handleFieldChange("company", e.target.value)}
+              onBlur={() => handleFieldBlur("company")}
+              aria-invalid={!!errors.company}
+              className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
+                errors.company ? "border-red-600" : "border-[#E2DAD0]"
+              }`}
             />
           </div>
+          {errors.company && <p className="text-sm text-red-600 font-semibold mt-1.5">{errors.company}</p>}
         </div>
 
         {/* Preferred Date */}
@@ -317,7 +374,9 @@ export default function BookTourForm({
               required
               value={formData.date}
               min={new Date().toISOString().split("T")[0]}
-              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              onChange={(e) => handleFieldChange("date", e.target.value)}
+              onBlur={() => handleFieldBlur("date")}
+              aria-invalid={!!errors.date}
               className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                 errors.date ? "border-red-600" : "border-[#E2DAD0]"
               }`}

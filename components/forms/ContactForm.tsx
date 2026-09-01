@@ -3,6 +3,19 @@
 import React, { useState } from "react";
 import { CheckCircle2, ArrowRight, Loader2, Mail, Phone, User } from "lucide-react";
 import Button from "@/components/ui/Button";
+import {
+  validateEmail,
+  validateMessage,
+  validateName,
+  validatePhone,
+} from "@/lib/validation";
+
+const FIELD_VALIDATORS: Record<string, (value: string) => string> = {
+  name: validateName,
+  email: validateEmail,
+  phone: validatePhone,
+  message: validateMessage,
+};
 
 export default function ContactForm({ className }: { className?: string }) {
   const [formData, setFormData] = useState({
@@ -16,14 +29,33 @@ export default function ContactForm({ className }: { className?: string }) {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const handleFieldChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    // Live feedback once the field has been visited: errors clear as the
+    // user fixes them and reappear if the value becomes invalid again.
+    if (touched[field] && FIELD_VALIDATORS[field]) {
+      setErrors((prev) => ({ ...prev, [field]: FIELD_VALIDATORS[field](value) }));
+    }
+  };
+
+  const handleFieldBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    if (FIELD_VALIDATORS[field]) {
+      setErrors((prev) => ({
+        ...prev,
+        [field]: FIELD_VALIDATORS[field](formData[field as keyof typeof formData] as string),
+      }));
+    }
+  };
 
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!formData.name.trim()) errs.name = "Please enter your name";
-    if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email))
-      errs.email = "Please enter a valid email address";
-    if (!formData.phone.trim()) errs.phone = "Please enter your phone number";
-    if (!formData.message.trim()) errs.message = "Please enter your message";
+    for (const [field, validator] of Object.entries(FIELD_VALIDATORS)) {
+      const message = validator(formData[field as keyof typeof formData] as string);
+      if (message) errs[field] = message;
+    }
     return errs;
   };
 
@@ -32,6 +64,7 @@ export default function ContactForm({ className }: { className?: string }) {
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
+      setTouched({ name: true, email: true, phone: true, message: true });
       return;
     }
 
@@ -61,6 +94,8 @@ export default function ContactForm({ className }: { className?: string }) {
           size="md"
           onClick={() => {
             setSubmitted(false);
+            setErrors({});
+            setTouched({});
             setFormData({
               name: "",
               email: "",
@@ -79,6 +114,7 @@ export default function ContactForm({ className }: { className?: string }) {
   return (
     <form
       onSubmit={handleSubmit}
+      noValidate
       className={`bg-white border border-[#E2DAD0] p-6 sm:p-10 rounded-sm shadow-card ${className || ""}`}
     >
       <h3 className="font-serif text-2xl sm:text-3xl font-bold text-charcoal-950 mb-2">
@@ -98,9 +134,13 @@ export default function ContactForm({ className }: { className?: string }) {
             <input
               type="text"
               required
+              maxLength={60}
+              autoComplete="name"
               placeholder="e.g. Noushad Ellikkal"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => handleFieldChange("name", e.target.value)}
+              onBlur={() => handleFieldBlur("name")}
+              aria-invalid={!!errors.name}
               className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                 errors.name ? "border-red-600" : "border-[#E2DAD0]"
               }`}
@@ -119,9 +159,13 @@ export default function ContactForm({ className }: { className?: string }) {
               <input
                 type="email"
                 required
+                maxLength={100}
+                autoComplete="email"
                 placeholder="name@domain.com"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) => handleFieldChange("email", e.target.value)}
+                onBlur={() => handleFieldBlur("email")}
+                aria-invalid={!!errors.email}
                 className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                   errors.email ? "border-red-600" : "border-[#E2DAD0]"
                 }`}
@@ -139,9 +183,14 @@ export default function ContactForm({ className }: { className?: string }) {
               <input
                 type="tel"
                 required
+                maxLength={20}
+                autoComplete="tel"
+                inputMode="tel"
                 placeholder="+971 52 000 0000"
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={(e) => handleFieldChange("phone", e.target.value)}
+                onBlur={() => handleFieldBlur("phone")}
+                aria-invalid={!!errors.phone}
                 className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                   errors.phone ? "border-red-600" : "border-[#E2DAD0]"
                 }`}
@@ -177,9 +226,12 @@ export default function ContactForm({ className }: { className?: string }) {
           <textarea
             required
             rows={4}
+            maxLength={2000}
             placeholder="How can First Gulf Business Center assist you?"
             value={formData.message}
-            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+            onChange={(e) => handleFieldChange("message", e.target.value)}
+            onBlur={() => handleFieldBlur("message")}
+            aria-invalid={!!errors.message}
             className={`w-full p-4 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
               errors.message ? "border-red-600" : "border-[#E2DAD0]"
             }`}
