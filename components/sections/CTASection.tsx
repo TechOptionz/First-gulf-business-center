@@ -49,7 +49,7 @@ export default function CTASection() {
               <MagneticButton>
                 <a
                   href={`tel:${COMPANY_DETAILS.phonePrimaryTel}`}
-                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-base sm:text-lg font-bold tracking-wider uppercase rounded-sm border-2 border-cream-100 text-white hover:bg-white/10 transition-all cursor-pointer min-h-[54px]"
+                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-base sm:text-lg font-bold tracking-wider uppercase rounded-sm border-2 border-cream-100 text-white hover:bg-white/10 hover:border-white hover:shadow-[0_10px_28px_-8px_rgba(255,255,255,0.3)] transition-[background-color,border-color,box-shadow,transform] duration-300 cursor-pointer min-h-[54px]"
                 >
                   <Phone className="w-5 h-5 text-brass-300" />
                   <span>Call +971 52 790 0335</span>

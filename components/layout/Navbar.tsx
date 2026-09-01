@@ -55,6 +55,26 @@ export default function Navbar() {
     };
   }, [mobileMenuOpen]);
 
+  // A `Link` pointing at the route you are already on is a no-op: the pathname
+  // never changes, so the drawer stayed open and the tour CTAs looked dead.
+  // Close the drawer on tap, and scroll to the booking form instead of
+  // re-navigating when we are already on /book-a-tour.
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  const handleTourClick = (e: React.MouseEvent) => {
+    closeMobileMenu();
+    if (pathname !== "/book-a-tour") return;
+
+    e.preventDefault();
+    // The drawer's scroll lock is released by an effect, so wait a frame
+    // before scrolling or the page is still pinned.
+    requestAnimationFrame(() => {
+      document
+        .getElementById("tour-form")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
   const toggleMobileSubmenu = (name: string) => {
     setMobileExpanded((prev) => ({
       ...prev,
@@ -252,6 +272,7 @@ export default function Navbar() {
                 variant="primary"
                 size="sm"
                 icon={<Calendar className="w-4 h-4" />}
+                onClick={handleTourClick}
               >
                 Book a Tour
               </Button>
@@ -265,6 +286,7 @@ export default function Navbar() {
               variant="primary"
               size="sm"
               className="text-xs px-3 py-2 sm:hidden font-bold"
+              onClick={handleTourClick}
             >
               Book Tour
             </Button>
@@ -352,6 +374,7 @@ export default function Navbar() {
                             ? "bg-maroon-50/90 text-maroon-900 border-maroon-300 border-l-4 border-l-maroon-800 shadow-sm"
                             : "bg-white text-charcoal-950 border-cream-300 hover:border-brass-400 hover:bg-cream-100"
                         )}
+                        onClick={closeMobileMenu}
                       >
                         <div className="w-8 h-8 rounded-sm bg-cream-100 flex items-center justify-center shrink-0 border border-cream-300">
                           {getSubmenuIcon(link.href)}
@@ -379,7 +402,10 @@ export default function Navbar() {
                         <Link
                           href={link.href}
                           className="flex min-h-[44px] items-center gap-3.5 flex-1 text-base font-bold tracking-wide uppercase text-charcoal-950 hover:text-maroon-800"
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            closeMobileMenu();
+                          }}
                         >
                           <div className="w-8 h-8 rounded-sm bg-cream-100 flex items-center justify-center shrink-0 border border-cream-300">
                             {getSubmenuIcon(link.href)}
@@ -411,6 +437,7 @@ export default function Navbar() {
                               key={subItem.name}
                               href={subItem.href}
                               className="flex min-h-[48px] items-start gap-3 rounded-sm p-3 bg-white border border-cream-200 hover:border-brass-400 hover:bg-cream-100 transition-colors group"
+                              onClick={closeMobileMenu}
                             >
                               <div className="w-7 h-7 rounded-sm bg-maroon-50 flex items-center justify-center shrink-0 mt-0.5 border border-maroon-200 group-hover:bg-maroon-800 group-hover:text-white transition-colors">
                                 {getSubmenuIcon(subItem.href)}
@@ -448,6 +475,7 @@ export default function Navbar() {
                   fullWidth
                   icon={<Calendar className="w-4 h-4" />}
                   className="font-bold py-3 text-sm tracking-wide uppercase shadow-sm"
+                  onClick={handleTourClick}
                 >
                   Schedule Tour
                 </Button>
@@ -458,6 +486,7 @@ export default function Navbar() {
                   size="md"
                   fullWidth
                   className="font-bold py-3 text-sm tracking-wide uppercase shadow-sm"
+                  onClick={closeMobileMenu}
                 >
                   Chat on WhatsApp
                 </Button>

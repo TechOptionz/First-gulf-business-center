@@ -31,6 +31,7 @@ export default function Button({
   className,
   disabled,
   type = "button",
+  onClick,
   ...props
 }: ButtonProps) {
   const baseStyles =
@@ -44,17 +45,19 @@ export default function Button({
     lg: "px-8 py-4 text-base sm:text-lg font-bold tracking-wider uppercase gap-3 min-h-[54px]",
   };
 
+  // Each variant carries its own hover glow, tinted to sit well on the
+  // background it is normally used against.
   const variantStyles = {
     primary:
-      "bg-maroon-800 text-white shadow-luxury hover:bg-maroon-900 hover:shadow-luxury-hover border border-maroon-700 active:translate-y-0.5",
+      "bg-maroon-800 text-white shadow-luxury hover:bg-maroon-900 hover:shadow-[0_10px_28px_-8px_rgba(107,17,36,0.55)] border border-maroon-700 active:translate-y-0.5 active:shadow-luxury",
     secondary:
-      "bg-cream-100 text-maroon-900 border-2 border-brass-400 hover:bg-cream-200 hover:border-brass-500 shadow-sm active:translate-y-0.5",
+      "bg-cream-100 text-maroon-900 border-2 border-brass-400 hover:bg-cream-200 hover:border-brass-500 shadow-sm hover:shadow-[0_10px_24px_-10px_rgba(180,140,80,0.55)] active:translate-y-0.5",
     gold:
-      "bg-brass-400 text-charcoal-950 font-bold hover:bg-brass-300 shadow-luxury hover:shadow-luxury-hover border border-brass-300 active:translate-y-0.5",
+      "bg-brass-400 text-charcoal-950 font-bold hover:bg-brass-300 shadow-luxury hover:shadow-[0_10px_28px_-8px_rgba(197,168,128,0.65)] border border-brass-300 active:translate-y-0.5 active:shadow-luxury",
     dark:
-      "bg-charcoal-950 text-white border border-brass-400/50 hover:bg-black hover:border-brass-400 active:translate-y-0.5",
+      "bg-charcoal-950 text-white border border-brass-400/50 hover:bg-black hover:border-brass-400 hover:shadow-[0_10px_28px_-8px_rgba(197,168,128,0.45)] active:translate-y-0.5",
     outline:
-      "bg-transparent text-maroon-900 border-2 border-maroon-800 hover:bg-maroon-800 hover:text-white active:translate-y-0.5",
+      "bg-transparent text-maroon-900 border-2 border-maroon-800 hover:bg-maroon-800 hover:text-white hover:shadow-[0_10px_24px_-10px_rgba(107,17,36,0.5)] active:translate-y-0.5",
     ghost:
       "bg-transparent text-charcoal-900 hover:text-maroon-800 hover:bg-cream-200/80 p-0 shadow-none",
   };
@@ -70,10 +73,17 @@ export default function Button({
   const resolvedIcon =
     icon ?? (withArrow ? <ArrowRight className="h-4 w-4" /> : null);
 
+  // Only the arrow slides on hover -- it reads as "go". A literal icon
+  // (calendar, phone) drifting sideways just looks like the button is loose.
   const iconElement = resolvedIcon && (
     <span
       aria-hidden="true"
-      className="shrink-0 transition-transform duration-300 group-hover/btn:translate-x-0.5"
+      className={cn(
+        "shrink-0",
+        withArrow &&
+          !icon &&
+          "transition-transform duration-300 group-hover/btn:translate-x-0.5"
+      )}
     >
       {resolvedIcon}
     </span>
@@ -95,6 +105,11 @@ export default function Button({
         rel={rel}
         className={buttonClasses}
         aria-disabled={disabled}
+        // The link branch used to swallow `onClick`, so CTAs that also needed
+        // to run a handler (closing the mobile drawer, scrolling to a form
+        // when the href points at the page you are already on) silently did
+        // nothing on tap.
+        onClick={onClick as unknown as React.MouseEventHandler<HTMLAnchorElement>}
       >
         {content}
       </Link>
@@ -106,6 +121,7 @@ export default function Button({
       type={type}
       className={buttonClasses}
       disabled={disabled}
+      onClick={onClick}
       {...props}
     >
       {content}
