@@ -208,15 +208,18 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom Copyright Bar — extra bottom/right clearance keeps the text out
-          from under the fixed "Ask Us Any Question" pill and the scroll-to-top
-          button stacked above it (~128px tall from the viewport bottom) */}
-      <div className="relative z-10 border-t border-charcoal-800 pt-6 pb-36 px-4 sm:px-6 lg:px-8 bg-black/60 text-sm text-cream-300 font-medium">
+      {/* Bottom Copyright Bar. The padding is even top and bottom, and sized
+          so the row clears the fixed "Ask Us Any Question" pill (48px tall at
+          bottom-5, so 68px up) - the widget then floats over the empty band
+          below the text instead of covering it. */}
+      <div className="relative z-10 border-t border-charcoal-800 py-20 px-4 sm:px-6 lg:px-8 bg-black/60 text-sm text-cream-300 font-medium">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-center sm:text-left text-cream-200">
             Copyright &copy; {currentYear} First Gulf Business Center L.L.C. All rights reserved. Registered in Dubai, UAE.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-cream-200">
+          {/* Right inset clears the scroll-to-top button, which stacks above
+              the pill and reaches into this row at the far right edge. */}
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 pr-6 sm:pr-20 text-cream-200">
             <FooterLink href="/privacy-policy" className="inline-flex items-center py-1 hover:text-brass-300 transition-colors">
               Privacy Policy
             </FooterLink>
