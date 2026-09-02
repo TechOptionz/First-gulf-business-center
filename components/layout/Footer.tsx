@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import FooterLink from "@/components/ui/FooterLink";
 import { Phone, Mail, MapPin, Clock, Building } from "lucide-react";
 import Logo from "@/components/ui/Logo";
 import { COMPANY_DETAILS } from "@/data/content";
@@ -53,9 +53,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           {/* Column 1: Brand & Profile */}
           <div className="space-y-4">
-            <div className="inline-block">
-              <Logo width={220} height={75} variant="white" href="/" />
-            </div>
+            <FooterLink
+              href="/"
+              aria-label="First Gulf Business Center Home"
+              className="inline-block max-w-full"
+            >
+              <Logo width={220} height={75} variant="white" href="" />
+            </FooterLink>
             <p className="text-sm sm:text-base text-cream-200 leading-relaxed font-normal pt-1">
               Dubai&apos;s premier executive workspace destination. Providing DED-compliant serviced offices, high-tech coworking, certified EJARI & Estidama virtual contracts, and seamless business formation.
             </p>
@@ -115,13 +119,13 @@ export default function Footer() {
                 { name: "Terms of Service", href: "/terms-of-service" },
               ].map((item) => (
                 <li key={item.name}>
-                  <Link
+                  <FooterLink
                     href={item.href}
-                    className="hover:text-brass-300 transition-colors inline-flex items-center gap-2 group"
+                    className="inline-flex items-center gap-2 py-0.5 group hover:text-brass-300 transition-colors"
                   >
                     <span className="w-2 h-2 rounded-full bg-brass-400/70 group-hover:bg-brass-300" />
                     <span>{item.name}</span>
-                  </Link>
+                  </FooterLink>
                 </li>
               ))}
             </ul>
@@ -143,13 +147,13 @@ export default function Footer() {
                 { name: "Trademark Registration", href: "/business-consultancy/trademark-registration" },
               ].map((item) => (
                 <li key={item.name}>
-                  <Link
+                  <FooterLink
                     href={item.href}
-                    className="hover:text-brass-300 transition-colors inline-flex items-center gap-2 group"
+                    className="inline-flex items-center gap-2 py-0.5 group hover:text-brass-300 transition-colors"
                   >
                     <span className="w-2 h-2 rounded-full bg-brass-400/70 group-hover:bg-brass-300" />
                     <span>{item.name}</span>
-                  </Link>
+                  </FooterLink>
                 </li>
               ))}
             </ul>
@@ -205,22 +209,20 @@ export default function Footer() {
       </div>
 
       {/* Bottom Copyright Bar — extra bottom/right clearance keeps the text out
-          from under the fixed "Ask Us Any Question" + scroll-to-top stack */}
-      <div className="border-t border-charcoal-800 pt-6 pb-36 sm:pb-24 px-4 sm:px-6 lg:px-8 bg-black/60 text-sm text-cream-300 font-medium">
+          from under the fixed "Ask Us Any Question" pill and the scroll-to-top
+          button stacked above it (~128px tall from the viewport bottom) */}
+      <div className="relative z-10 border-t border-charcoal-800 pt-6 pb-36 px-4 sm:px-6 lg:px-8 bg-black/60 text-sm text-cream-300 font-medium">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-center sm:text-left text-cream-200">
             Copyright &copy; {currentYear} First Gulf Business Center L.L.C. All rights reserved. Registered in Dubai, UAE.
           </p>
-          <div className="flex items-center space-x-6 text-cream-200 sm:pr-14">
-            <Link href="/privacy-policy" className="hover:text-brass-300 transition-colors">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-cream-200">
+            <FooterLink href="/privacy-policy" className="inline-flex items-center py-1 hover:text-brass-300 transition-colors">
               Privacy Policy
-            </Link>
-            <Link href="/terms-of-service" className="hover:text-brass-300 transition-colors">
+            </FooterLink>
+            <FooterLink href="/terms-of-service" className="inline-flex items-center py-1 hover:text-brass-300 transition-colors">
               Terms of Service
-            </Link>
-            <Link href="/contact" className="hover:text-brass-300 transition-colors">
-              Support
-            </Link>
+            </FooterLink>
           </div>
         </div>
       </div>

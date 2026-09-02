@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import { CheckCircle2, ArrowRight, Loader2, Mail, Phone, User } from "lucide-react";
 import Button from "@/components/ui/Button";
 import {
+  sanitizeEmail,
+  sanitizeName,
+  sanitizePhone,
   validateEmail,
   validateMessage,
   validateName,
@@ -15,6 +18,13 @@ const FIELD_VALIDATORS: Record<string, (value: string) => string> = {
   email: validateEmail,
   phone: validatePhone,
   message: validateMessage,
+};
+
+// Characters each field simply refuses to hold, applied on every keystroke.
+const FIELD_SANITIZERS: Record<string, (value: string) => string> = {
+  name: sanitizeName,
+  email: sanitizeEmail,
+  phone: sanitizePhone,
 };
 
 export default function ContactForm({ className }: { className?: string }) {
@@ -31,7 +41,12 @@ export default function ContactForm({ className }: { className?: string }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const handleFieldChange = (field: string, value: string) => {
+  const handleFieldChange = (field: string, rawValue: string) => {
+    // Characters the field does not accept are dropped as they are typed
+    // or pasted, rather than being taken and then complained about.
+    const value = FIELD_SANITIZERS[field]
+      ? FIELD_SANITIZERS[field](rawValue)
+      : rawValue;
     setFormData((prev) => ({ ...prev, [field]: value }));
     // Live feedback once the field has been visited: errors clear as the
     // user fixes them and reappear if the value becomes invalid again.
