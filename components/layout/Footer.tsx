@@ -204,13 +204,14 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom Copyright Bar */}
-      <div className="border-t border-charcoal-800 py-6 px-4 sm:px-6 lg:px-8 bg-black/60 text-sm text-cream-300 font-medium">
+      {/* Bottom Copyright Bar — extra bottom/right clearance keeps the text out
+          from under the fixed "Ask Us Any Question" + scroll-to-top stack */}
+      <div className="border-t border-charcoal-800 pt-6 pb-36 sm:pb-24 px-4 sm:px-6 lg:px-8 bg-black/60 text-sm text-cream-300 font-medium">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-center sm:text-left text-cream-200">
             Copyright &copy; {currentYear} First Gulf Business Center L.L.C. All rights reserved. Registered in Dubai, UAE.
           </p>
-          <div className="flex items-center space-x-6 text-cream-200">
+          <div className="flex items-center space-x-6 text-cream-200 sm:pr-14">
             <Link href="/privacy-policy" className="hover:text-brass-300 transition-colors">
               Privacy Policy
             </Link>
