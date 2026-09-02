@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckCircle2, Calendar, Clock, Phone, Mail, User, Building, Building2, Briefcase, Users2, ArrowRight, Loader2 } from "lucide-react";
+import { CheckCircle2, Calendar, Clock, Phone, Mail, MapPin, ShieldCheck, User, Building, Building2, Briefcase, Users2, ArrowRight, Loader2, Zap } from "lucide-react";
 import Button from "@/components/ui/Button";
 import {
   sanitizeEmail,
@@ -36,6 +36,7 @@ interface BookTourFormProps {
 
 const SERVICE_GROUPS = [
   {
+    id: "workspace",
     label: "Workspace",
     icon: Building2,
     options: [
@@ -45,6 +46,7 @@ const SERVICE_GROUPS = [
     ],
   },
   {
+    id: "consultancy",
     label: "Business Consultancy",
     icon: Briefcase,
     options: [
@@ -57,11 +59,29 @@ const SERVICE_GROUPS = [
 
 const SERVICE_OPTIONS = SERVICE_GROUPS.flatMap((group) => group.options);
 
+/** Preselects the incoming service inside whichever group owns it. */
+function initialServices(optionId: string): Record<string, string> {
+  const group = SERVICE_GROUPS.find((entry) =>
+    entry.options.some((option) => option.id === optionId)
+  );
+  return group ? { [group.id]: optionId } : {};
+}
+
+// Reassurance strip under the submit button - three evenly sized columns so
+// the items keep the same rhythm whatever the label lengths are.
+const BOOKING_ASSURANCES = [
+  { icon: MapPin, label: "2nd Floor, Madina Mall, Dubai" },
+  { icon: ShieldCheck, label: "No obligation • Confidential" },
+  { icon: Zap, label: "Instant confirmation" },
+];
+
 export default function BookTourForm({
   defaultWorkspace = "coworking",
   className,
 }: BookTourFormProps) {
-  const [workspace, setWorkspace] = useState(defaultWorkspace);
+  // One choice per group, so a visitor can ask about a workspace and a
+  // consultancy service in the same booking.
+  const [services, setServices] = useState(() => initialServices(defaultWorkspace));
   const [teamSize, setTeamSize] = useState("1-3");
   const [formData, setFormData] = useState({
     name: "",
@@ -80,7 +100,21 @@ export default function BookTourForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const selectedService = SERVICE_OPTIONS.find((option) => option.id === workspace);
+  // Group order, so the workspace always reads before the consultancy service.
+  const selectedServices = SERVICE_GROUPS.map((group) =>
+    SERVICE_OPTIONS.find((option) => option.id === services[group.id])
+  ).filter((option) => option !== undefined);
+
+  const toggleService = (groupId: string, optionId: string) => {
+    setServices((prev) => {
+      const next = { ...prev };
+      // Clicking the active card clears that group again.
+      if (next[groupId] === optionId) delete next[groupId];
+      else next[groupId] = optionId;
+      return next;
+    });
+    setErrors((prev) => ({ ...prev, service: "" }));
+  };
 
   const handleFieldChange = (field: string, rawValue: string) => {
     // Characters the field does not accept are dropped as they are typed
@@ -118,6 +152,9 @@ export default function BookTourForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const errs = validate();
+    if (selectedServices.length === 0) {
+      errs.service = "Please select at least one workspace or service";
+    }
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       setTouched({ name: true, email: true, phone: true, company: true, date: true });
@@ -153,8 +190,12 @@ export default function BookTourForm({
             <span className="font-bold text-right">2nd Floor, Madina Mall, Office 2-20, Dubai</span>
           </div>
           <div className="flex justify-between border-b border-cream-300 pb-2">
-            <span className="text-charcoal-600 font-medium">Service:</span>
-            <span className="font-bold text-right">{selectedService?.label ?? workspace.replace(/-/g, " ")}</span>
+            <span className="text-charcoal-600 font-medium">
+              {selectedServices.length > 1 ? "Services:" : "Service:"}
+            </span>
+            <span className="font-bold text-right">
+              {selectedServices.map((option) => option.label).join(" + ")}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-charcoal-600 font-medium">Contact:</span>
@@ -180,6 +221,7 @@ export default function BookTourForm({
               setSubmitted(false);
               setErrors({});
               setTouched({});
+              setServices(initialServices(defaultWorkspace));
               setFormData({
                 name: "",
                 email: "",
@@ -217,9 +259,12 @@ export default function BookTourForm({
 
       {/* Workspace / Service Selector */}
       <div className="mb-8">
-        <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-3">
+        <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-1">
           Select Workspace or Service <span className="text-maroon-700">*</span>
         </label>
+        <p className="mb-3 text-sm text-charcoal-600">
+          Pick one from each group if you need both - tap a selected card to clear it.
+        </p>
         <div className="space-y-5">
           {SERVICE_GROUPS.map((group) => {
             const GroupIcon = group.icon;
@@ -230,26 +275,40 @@ export default function BookTourForm({
                   {group.label}
                 </div>
                 <div className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-3">
-                  {group.options.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => setWorkspace(item.id)}
-                      className={`flex min-h-[44px] min-w-0 flex-col rounded-sm border p-4 text-left transition-[border-color,box-shadow] duration-200 cursor-pointer ${
-                        workspace === item.id
-                          ? "border-maroon-800 bg-maroon-50/70 shadow-sm ring-2 ring-maroon-800"
-                          : "border-cream-300 hover:border-brass-400 bg-white"
-                      }`}
-                    >
-                      <div className="min-w-0 text-base font-bold leading-snug text-charcoal-950">{item.label}</div>
-                      <div className="mt-1 min-w-0 text-sm leading-snug text-charcoal-700">{item.desc}</div>
-                    </button>
-                  ))}
+                  {group.options.map((item) => {
+                    const isSelected = services[group.id] === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => toggleService(group.id, item.id)}
+                        aria-pressed={isSelected}
+                        className={`flex min-h-[44px] min-w-0 flex-col rounded-sm border p-4 text-left transition-[border-color,box-shadow] duration-200 cursor-pointer ${
+                          isSelected
+                            ? "border-maroon-800 bg-maroon-50/70 shadow-sm ring-2 ring-maroon-800"
+                            : "border-cream-300 hover:border-brass-400 bg-white"
+                        }`}
+                      >
+                        <div className="flex min-w-0 items-start justify-between gap-2">
+                          <div className="min-w-0 text-base font-bold leading-snug text-charcoal-950">{item.label}</div>
+                          {/* Always rendered so selecting a card cannot reflow its title. */}
+                          <CheckCircle2
+                            aria-hidden
+                            className={`mt-0.5 h-4 w-4 shrink-0 ${isSelected ? "text-maroon-800" : "text-transparent"}`}
+                          />
+                        </div>
+                        <div className="mt-1 min-w-0 text-sm leading-snug text-charcoal-700">{item.desc}</div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             );
           })}
         </div>
+        {errors.service && (
+          <p className="mt-2 text-sm text-red-600 font-semibold">{errors.service}</p>
+        )}
       </div>
 
       {/* Team Size Selector */}
@@ -471,10 +530,13 @@ export default function BookTourForm({
         {loading ? "Confirming Schedule..." : "Confirm & Book Workspace Tour"}
       </Button>
 
-      <div className="mt-5 flex items-center justify-between text-xs sm:text-sm text-charcoal-700 pt-4 border-t border-cream-200 font-medium">
-        <span>📍 2nd Floor, Madina Mall, Dubai</span>
-        <span>🔒 No obligation • Confidential</span>
-        <span>⚡ Instant confirmation</span>
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-y-3 gap-x-4 pt-5 border-t border-cream-200 text-xs sm:text-sm font-medium text-charcoal-700">
+        {BOOKING_ASSURANCES.map(({ icon: Icon, label }) => (
+          <div key={label} className="flex items-center justify-center gap-2 text-center">
+            <Icon className="w-4 h-4 shrink-0 text-brass-600" />
+            <span>{label}</span>
+          </div>
+        ))}
       </div>
     </form>
   );
