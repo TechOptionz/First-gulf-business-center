@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { COMPANY_DETAILS } from "@/data/content";
+import MapLink from "@/components/ui/MapLink";
 
 export const metadata: Metadata = {
   title: "Terms of Service | First Gulf Business Center Dubai",
@@ -82,7 +83,11 @@ export default function TermsOfServicePage() {
             </p>
             <div className="bg-cream-50 p-5 rounded-sm border border-cream-300 text-sm sm:text-base text-charcoal-900 space-y-1 font-medium">
               <div><strong>First Gulf Business Center L.L.C</strong></div>
-              <div>Offices 2–20, 2nd Floor, Madina Mall, Dubai, UAE</div>
+              <div>
+                <MapLink className="text-maroon-900 font-bold underline">
+                  {COMPANY_DETAILS.address}
+                </MapLink>
+              </div>
               <div>Email: {COMPANY_DETAILS.email} • Tel: {COMPANY_DETAILS.phonePrimary}</div>
             </div>
           </section>

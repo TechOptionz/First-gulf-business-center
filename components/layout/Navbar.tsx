@@ -9,6 +9,8 @@ import {
   X,
   ChevronDown,
   Phone,
+  PhoneCall,
+  Smartphone,
   Calendar,
   Clock,
   MapPin,
@@ -21,6 +23,7 @@ import {
 } from "lucide-react";
 import Logo from "@/components/ui/Logo";
 import Button from "@/components/ui/Button";
+import MapLink from "@/components/ui/MapLink";
 import MagneticButton from "@/components/motion/MagneticButton";
 import { NAVIGATION_LINKS, COMPANY_DETAILS } from "@/data/content";
 import { cn } from "@/lib/utils";
@@ -98,10 +101,10 @@ export default function Navbar() {
       <div className="bg-charcoal-950 text-cream-100 text-sm py-2.5 px-4 border-b border-charcoal-800 hidden md:block">
         <div className="max-w-7xl mx-auto flex items-center justify-between font-medium">
           <div className="flex items-center space-x-6 text-sm text-cream-200">
-            <span className="flex items-center gap-2">
+            <MapLink className="flex items-center gap-2 hover:text-brass-300 transition-colors">
               <MapPin className="w-4 h-4 text-brass-400 shrink-0" />
-              2nd Floor, Madina Mall, Office 2–20, Al Muhaisnah 4, Dubai
-            </span>
+              {COMPANY_DETAILS.address}
+            </MapLink>
             <span className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-brass-400 shrink-0" />
               24/7 Operations & Dedicated Concierge
@@ -339,19 +342,49 @@ export default function Navbar() {
                 </button>
               </div>
 
-              {/* Quick Contact Header Banner inside Drawer */}
-              <div className="py-3 px-4 bg-maroon-950 text-white text-xs flex items-center justify-between border-b border-maroon-800 font-medium">
-                <a
-                  href={`tel:${COMPANY_DETAILS.phonePrimaryTel}`}
-                  className="flex items-center gap-2 text-brass-300 font-bold hover:text-white transition-colors"
-                >
-                  <Phone className="w-3.5 h-3.5 text-brass-400" />
-                  <span>{COMPANY_DETAILS.phonePrimary}</span>
-                </a>
-                <span className="flex items-center gap-1 text-cream-200 font-semibold">
-                  <MapPin className="w-3.5 h-3.5 text-brass-400" />
-                  Madina Mall, Dubai
-                </span>
+              {/* Quick Contact Header Banner inside Drawer. Address and both
+                  numbers each get their own full-width tap target. */}
+              <div className="border-b border-maroon-800 bg-maroon-950 px-4 py-3 text-xs font-medium text-white">
+                <MapLink className="flex items-start gap-2.5 py-1 text-cream-100 hover:text-brass-300 transition-colors">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brass-400" />
+                  <span>
+                    <span className="block font-bold leading-snug">
+                      {COMPANY_DETAILS.address}
+                    </span>
+                    <span className="mt-0.5 block text-[11px] text-cream-300">
+                      P.O. Box {COMPANY_DETAILS.poBox} • Tap for directions
+                    </span>
+                  </span>
+                </MapLink>
+
+                <div className="mt-2.5 space-y-1 border-t border-maroon-800 pt-2">
+                  {[
+                    {
+                      label: "Mobile / WhatsApp",
+                      icon: Smartphone,
+                      display: COMPANY_DETAILS.phonePrimary,
+                      tel: COMPANY_DETAILS.phonePrimaryTel,
+                    },
+                    {
+                      label: "Landline",
+                      icon: PhoneCall,
+                      display: COMPANY_DETAILS.phoneSecondary,
+                      tel: COMPANY_DETAILS.phoneSecondaryTel,
+                    },
+                  ].map(({ label, icon: Icon, display, tel }) => (
+                    <a
+                      key={label}
+                      href={`tel:${tel}`}
+                      className="flex items-center justify-between gap-3 py-1.5 text-cream-200 hover:text-white transition-colors"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Icon className="h-3.5 w-3.5 shrink-0 text-brass-400" />
+                        {label}
+                      </span>
+                      <span className="font-bold text-brass-300">{display}</span>
+                    </a>
+                  ))}
+                </div>
               </div>
 
               {/* Nav Items List */}

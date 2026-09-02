@@ -88,7 +88,7 @@ export default function RootLayout({
     priceRange: "$$$",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "2nd Floor, Madina Mall, Offices 2–20, Al Muhaisnah 4",
+      streetAddress: "2nd Floor, Madina Mall, Offices 2–20 & 2–21, Al Muhaisnah 4",
       addressLocality: "Dubai",
       postalCode: COMPANY_DETAILS.poBox,
       addressCountry: "AE",

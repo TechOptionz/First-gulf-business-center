@@ -14,6 +14,7 @@ import TextReveal from "@/components/motion/TextReveal";
 import FadeUp from "@/components/motion/FadeUp";
 import MagneticButton from "@/components/motion/MagneticButton";
 import HeroSlideshow from "@/components/sections/HeroSlideshow";
+import MapLink from "@/components/ui/MapLink";
 
 export default function HeroSection() {
   return (
@@ -30,9 +31,11 @@ export default function HeroSection() {
           {/* Eyebrow / Location Pill */}
           <FadeUp delay={0.1} distance={15}>
             <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mb-5 sm:mb-6">
-              <Badge variant="dark" dot>
-                Madina Mall • Al Muhaisnah 4, Dubai
-              </Badge>
+              <MapLink className="inline-block">
+                <Badge variant="dark" dot>
+                  Madina Mall • Al Muhaisnah 4, Dubai
+                </Badge>
+              </MapLink>
               <span className="hidden sm:inline-block text-xs sm:text-sm font-bold tracking-widest text-brass-400 uppercase">
                 • DED & RERA Approved
               </span>

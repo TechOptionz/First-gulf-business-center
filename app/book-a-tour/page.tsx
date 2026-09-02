@@ -11,6 +11,7 @@ import FadeUp from "@/components/motion/FadeUp";
 import BookTourForm from "@/components/forms/BookTourForm";
 import TenantLoungeHighlight from "@/components/sections/TenantLoungeHighlight";
 import { COMPANY_DETAILS } from "@/data/content";
+import MapLink from "@/components/ui/MapLink";
 
 export const metadata: Metadata = {
   title: "Book an Executive Tour | First Gulf Business Center Dubai",
@@ -82,10 +83,10 @@ export default function BookTourPage() {
                   <CheckCircle className="w-5 h-5 text-brass-400" />
                   <span>Free Day-Pass Included</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <MapLink className="flex items-center gap-2 hover:text-brass-300 transition-colors">
                   <MapPin className="w-5 h-5 text-brass-400" />
-                  <span>Madina Mall 2nd Floor</span>
-                </div>
+                  <span>Madina Mall, 2nd Floor • Offices 2–20 & 2–21</span>
+                </MapLink>
               </div>
             </FadeUp>
           </div>

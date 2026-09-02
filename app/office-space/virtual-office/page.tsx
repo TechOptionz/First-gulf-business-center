@@ -24,7 +24,7 @@ const VIRTUAL_OFFICE_BENEFITS = [
     icon: <Building2 className="h-6 w-6" />,
     title: "Prestigious Registered Address",
     description:
-      "Display “2nd Floor, Madina Mall, Office 2–20, Al Muhaisnah 4, Dubai, UAE” across your trade license, corporate website, bank accounts, and invoices.",
+      "Display “2nd Floor, Madina Mall, Offices 2–20 & 2–21, Al Muhaisnah 4, Dubai, UAE” across your trade license, corporate website, bank accounts, and invoices.",
   },
   {
     icon: <PhoneCall className="h-6 w-6" />,

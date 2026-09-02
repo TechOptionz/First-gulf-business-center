@@ -12,6 +12,7 @@ import AmenityShowcase from "@/components/sections/AmenityShowcase";
 import TenantLoungeHighlight from "@/components/sections/TenantLoungeHighlight";
 import CTASection from "@/components/sections/CTASection";
 import { WORKSPACE_SERVICES } from "@/data/content";
+import MapLink from "@/components/ui/MapLink";
 
 export const metadata: Metadata = {
   title: "Office Spaces in Dubai | Serviced Offices, Coworking & Virtual Offices",
@@ -45,9 +46,11 @@ export default function OfficeSpacePage() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <FadeUp delay={0.1} distance={15}>
-              <Badge variant="dark" dot className="mb-6">
-                Madina Mall, Dubai • Offices 2–20
-              </Badge>
+              <MapLink className="mb-6 inline-block">
+                <Badge variant="dark" dot>
+                  Madina Mall, Dubai • Offices 2–20 & 2–21
+                </Badge>
+              </MapLink>
             </FadeUp>
 
             <TextReveal

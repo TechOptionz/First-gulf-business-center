@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { CheckCircle2, Calendar, Clock, Phone, Mail, MapPin, ShieldCheck, User, Building, Building2, Briefcase, Users2, ArrowRight, Loader2, Zap } from "lucide-react";
 import Button from "@/components/ui/Button";
+import MapLink from "@/components/ui/MapLink";
 import {
   sanitizeEmail,
   sanitizeName,
@@ -70,7 +71,7 @@ function initialServices(optionId: string): Record<string, string> {
 // Reassurance strip under the submit button - three evenly sized columns so
 // the items keep the same rhythm whatever the label lengths are.
 const BOOKING_ASSURANCES = [
-  { icon: MapPin, label: "2nd Floor, Madina Mall, Dubai" },
+  { icon: MapPin, label: "2nd Floor, Madina Mall, Offices 2–20 & 2–21, Dubai", href: true },
   { icon: ShieldCheck, label: "No obligation • Confidential" },
   { icon: Zap, label: "Instant confirmation" },
 ];
@@ -187,7 +188,9 @@ export default function BookTourForm({
         <div className="bg-cream-100 p-5 rounded-sm border border-[#E2DAD0] text-left text-sm sm:text-base text-charcoal-900 mb-8 space-y-2.5">
           <div className="flex justify-between border-b border-cream-300 pb-2">
             <span className="text-charcoal-600 font-medium">Location:</span>
-            <span className="font-bold text-right">2nd Floor, Madina Mall, Office 2-20, Dubai</span>
+            <MapLink className="font-bold text-right text-maroon-900 underline decoration-brass-400 underline-offset-2 hover:text-maroon-950">
+              2nd Floor, Madina Mall, Offices 2–20 & 2–21, Dubai
+            </MapLink>
           </div>
           <div className="flex justify-between border-b border-cream-300 pb-2">
             <span className="text-charcoal-600 font-medium">
@@ -531,12 +534,27 @@ export default function BookTourForm({
       </Button>
 
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-y-3 gap-x-4 pt-5 border-t border-cream-200 text-xs sm:text-sm font-medium text-charcoal-700">
-        {BOOKING_ASSURANCES.map(({ icon: Icon, label }) => (
-          <div key={label} className="flex items-center justify-center gap-2 text-center">
-            <Icon className="w-4 h-4 shrink-0 text-brass-600" />
-            <span>{label}</span>
-          </div>
-        ))}
+        {BOOKING_ASSURANCES.map(({ icon: Icon, label, href }) => {
+          const content = (
+            <>
+              <Icon className="w-4 h-4 shrink-0 text-brass-600" />
+              <span>{label}</span>
+            </>
+          );
+          const shared = "flex items-center justify-center gap-2 text-center";
+          return href ? (
+            <MapLink
+              key={label}
+              className={`${shared} hover:text-maroon-800 transition-colors`}
+            >
+              {content}
+            </MapLink>
+          ) : (
+            <div key={label} className={shared}>
+              {content}
+            </div>
+          );
+        })}
       </div>
     </form>
   );

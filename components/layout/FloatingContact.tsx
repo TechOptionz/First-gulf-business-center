@@ -227,7 +227,7 @@ export default function FloatingContact() {
       return "We offer flexible Coworking Desks (daily/monthly), Virtual Offices with certified EJARI & Estidama, and Move-In-Ready Private Serviced Office Suites at Madina Mall. Contact our concierge at +971 52 790 0335 for current pricing and custom proposals!";
     }
     if (q.includes("location") || q.includes("address") || q.includes("where") || q.includes("map")) {
-      return `First Gulf Business Center is located on the 2nd Floor, Madina Mall, Offices 2–20, Al Muhaisnah 4, Dubai, UAE (P.O. Box: ${COMPANY_DETAILS.poBox}). Covered mall parking is direct to elevators!`;
+      return `First Gulf Business Center is located on the 2nd Floor, Madina Mall, Offices 2–20 & 2–21, Al Muhaisnah 4, Dubai, UAE (P.O. Box: ${COMPANY_DETAILS.poBox}). Covered mall parking is direct to elevators!`;
     }
     if (q.includes("visa") || q.includes("bank") || q.includes("pro") || q.includes("setup") || q.includes("license")) {
       return FAQS[5].answer;

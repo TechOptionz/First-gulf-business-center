@@ -42,7 +42,7 @@ export default function LocationMapSection() {
                   <div className="min-w-0">
                     <h4 className="font-serif font-bold text-lg text-charcoal-950">Official Address</h4>
                     <p className="text-sm sm:text-base text-charcoal-800">
-                      2nd Floor, Madina Mall, Offices 2–20, Al Muhaisnah 4, Dubai, UAE (PO Box: 234438)
+                      2nd Floor, Madina Mall, Offices 2–20 & 2–21, Al Muhaisnah 4, Dubai, UAE (PO Box: 234438)
                     </p>
                   </div>
                 </div>

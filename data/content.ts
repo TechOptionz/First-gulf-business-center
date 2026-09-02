@@ -14,7 +14,7 @@ export const COMPANY_DETAILS = {
   name: "First Gulf Business Center",
   legalName: "First Gulf Business Center L.L.C",
   tagline: "Premier Executive Workspaces & Corporate Consultancy in Dubai",
-  address: "2nd Floor, Madina Mall, Offices 2–20, Al Muhaisnah 4, Dubai, UAE",
+  address: "2nd Floor, Madina Mall, Offices 2–20 & 2–21, Al Muhaisnah 4, Dubai, UAE",
   addressShort: "Madina Mall, Al Muhaisnah 4, Dubai",
   poBox: "234438",
   phonePrimary: "+971 52 790 0335",
@@ -323,7 +323,7 @@ export const FAQS = [
   },
   {
     question: "Can I use First Gulf Business Center's address as my registered company address?",
-    answer: "Absolutely. When you subscribe to our Virtual Office or Serviced Office packages, you are legally entitled to display '2nd Floor, Madina Mall, Office 2–20, Al Muhaisnah 4, Dubai, UAE' on your official trade license, invoices, website, corporate letterheads, and business cards.",
+    answer: "Absolutely. When you subscribe to our Virtual Office or Serviced Office packages, you are legally entitled to display '2nd Floor, Madina Mall, Offices 2–20 & 2–21, Al Muhaisnah 4, Dubai, UAE' on your official trade license, invoices, website, corporate letterheads, and business cards.",
     category: "Office Space",
   },
   {

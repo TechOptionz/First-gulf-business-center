@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { COMPANY_DETAILS } from "@/data/content";
+import MapLink from "@/components/ui/MapLink";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | First Gulf Business Center Dubai",
@@ -37,7 +38,7 @@ export default function PrivacyPolicyPage() {
               1. Introduction & Scope
             </h2>
             <p className="text-base sm:text-lg leading-relaxed text-charcoal-800 font-normal">
-              First Gulf Business Center L.L.C (&ldquo;FGBC&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;) operates the executive business center situated on the 2nd Floor of Madina Mall, Offices 2–20, Al Muhaisnah 4, Dubai, UAE. We are committed to safeguarding the privacy and confidentiality of our tenants, clients, and website visitors in full adherence to the United Arab Emirates Federal Decree-Law No. 45 of 2021 on Personal Data Protection (PDPL).
+              First Gulf Business Center L.L.C (&ldquo;FGBC&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;) operates the executive business center situated on the 2nd Floor of Madina Mall, Offices 2–20 & 2–21, Al Muhaisnah 4, Dubai, UAE. We are committed to safeguarding the privacy and confidentiality of our tenants, clients, and website visitors in full adherence to the United Arab Emirates Federal Decree-Law No. 45 of 2021 on Personal Data Protection (PDPL).
             </p>
           </section>
 
@@ -88,7 +89,11 @@ export default function PrivacyPolicyPage() {
             </p>
             <div className="bg-cream-50 p-5 rounded-sm border border-cream-300 text-sm sm:text-base text-charcoal-900 space-y-1.5 font-medium">
               <div><strong>First Gulf Business Center L.L.C</strong></div>
-              <div>2nd Floor, Madina Mall, Offices 2–20, Al Muhaisnah 4, Dubai, UAE</div>
+              <div>
+                <MapLink className="text-maroon-900 font-bold underline">
+                  {COMPANY_DETAILS.address}
+                </MapLink>
+              </div>
               <div>Email: <a href={`mailto:${COMPANY_DETAILS.email}`} className="text-maroon-900 font-bold underline">{COMPANY_DETAILS.email}</a></div>
               <div>Telephone: {COMPANY_DETAILS.phonePrimary}</div>
             </div>

@@ -2,6 +2,7 @@ import React from "react";
 import FooterLink from "@/components/ui/FooterLink";
 import { Phone, Mail, MapPin, Clock, Building } from "lucide-react";
 import Logo from "@/components/ui/Logo";
+import MapLink from "@/components/ui/MapLink";
 import { COMPANY_DETAILS } from "@/data/content";
 
 export default function Footer() {
@@ -166,12 +167,10 @@ export default function Footer() {
             </h4>
 
             <div className="space-y-3.5 text-sm sm:text-base text-cream-200 font-medium">
-              <div className="flex items-start gap-3">
+              <MapLink className="flex items-start gap-3 hover:text-brass-300 transition-colors">
                 <MapPin className="w-4 h-4 text-brass-400 shrink-0 mt-1" />
-                <span>
-                  2nd Floor, Madina Mall, Offices 2–20, Al Muhaisnah 4, Dubai, United Arab Emirates
-                </span>
-              </div>
+                <span>{COMPANY_DETAILS.address}</span>
+              </MapLink>
 
               <div className="flex items-center gap-3">
                 <Building className="w-4 h-4 text-brass-400 shrink-0" />

@@ -1,11 +1,12 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, Navigation } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import FeatureCard from "@/components/ui/FeatureCard";
 import { cardGridClass } from "@/components/ui/CardGrid";
 import Button from "@/components/ui/Button";
+import MapLink from "@/components/ui/MapLink";
 import TextReveal from "@/components/motion/TextReveal";
 import FadeUp from "@/components/motion/FadeUp";
 import ContactForm from "@/components/forms/ContactForm";
@@ -15,7 +16,7 @@ import { COMPANY_DETAILS } from "@/data/content";
 export const metadata: Metadata = {
   title: "Contact Us | First Gulf Business Center Madina Mall Dubai",
   description:
-    "Get in touch with First Gulf Business Center. 2nd Floor, Madina Mall, Offices 2–20, Dubai, UAE. Call +971 52 790 0335 or send an online message.",
+    "Get in touch with First Gulf Business Center. 2nd Floor, Madina Mall, Offices 2–20 & 2–21, Dubai, UAE. Call +971 52 790 0335 or send an online message.",
 };
 
 export default function ContactPage() {
@@ -138,11 +139,15 @@ export default function ContactPage() {
                   brassAccent
                   icon={<MapPin className="h-6 w-6" />}
                   title="Headquarters Address"
-                  description="2nd Floor, Madina Mall, Offices 2–20, Al Muhaisnah 4, Dubai, United Arab Emirates"
+                  description="2nd Floor, Madina Mall, Offices 2–20 & 2–21, Al Muhaisnah 4, Dubai, United Arab Emirates"
                 >
                   <p className="text-sm font-semibold text-charcoal-700">
                     P.O. Box: {COMPANY_DETAILS.poBox}
                   </p>
+                  <MapLink className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-maroon-900 underline decoration-brass-400 underline-offset-2 hover:text-maroon-950">
+                    <Navigation className="h-4 w-4 text-brass-600" />
+                    Get directions on Google Maps
+                  </MapLink>
                 </FeatureCard>
 
                 <div className="flex flex-col items-start gap-4 rounded-sm border border-brass-400/50 bg-maroon-900 p-5 text-white sm:flex-row sm:items-center sm:justify-between">
