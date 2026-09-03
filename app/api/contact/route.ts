@@ -82,6 +82,10 @@ export async function POST(request: Request) {
     html: renderHtml(doc),
     text: renderText(doc),
     replyTo: email,
+    // Both forms send from the same address, so everything the website
+    // generates arrives under one recognisable sender. Swap this to
+    // "enquiries" to split contact mail back onto no-reply@.
+    from: "bookings",
   });
 
   if (!result.ok) {
