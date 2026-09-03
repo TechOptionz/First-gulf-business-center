@@ -136,12 +136,12 @@ export async function POST(request: Request) {
     html: renderHtml(doc),
     text: renderText(doc),
     replyTo: email,
-    // Sends as no-reply@ along with the contact form. A separate bookings@
-    // sender is ready in lib/server/email.ts and is the nicer option -- but
-    // bookings@ does not exist as a Zoho mailbox (verified: 550 5.1.1 user
-    // does not exist), and a From address that bounces raises the spam score
-    // on exactly the mail that most needs to arrive. Add `from: "bookings"`
-    // here once that mailbox or alias has been created.
+    // Goes out as bookings@ so the owner can tell tour bookings apart from
+    // contact-form enquiries at a glance. Sending from that address needs no
+    // mailbox behind it -- only delivery to it would, and nothing is ever
+    // delivered there. Replies reach the visitor through replyTo, not this
+    // address, so nothing is lost by it being unattended.
+    from: "bookings",
   });
 
   if (!result.ok) {
