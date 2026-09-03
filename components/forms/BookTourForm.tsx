@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CheckCircle2, Calendar, Clock, Phone, Mail, MapPin, ShieldCheck, User, Building, Building2, Briefcase, Users2, ArrowRight, Loader2, Zap, AlertCircle } from "lucide-react";
 import Button from "@/components/ui/Button";
 import MapLink from "@/components/ui/MapLink";
@@ -128,6 +128,21 @@ export default function BookTourForm({
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const sending = status === "sending";
+  const successRef = useRef<HTMLDivElement>(null);
+
+  // The confirmation panel is much shorter than the form it replaces, so on a
+  // long page it can land off-screen and read as "nothing happened". Bring it
+  // into view and move focus to it, which also puts a screen reader there.
+  useEffect(() => {
+    if (status !== "sent") return;
+    const node = successRef.current;
+    if (!node) return;
+    node.focus({ preventScroll: true });
+    // scrollIntoView's own `behavior` overrides the CSS rule, so the
+    // reduced-motion preference has to be read here too.
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    node.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  }, [status]);
 
   // Group order, so the workspace always reads before the consultancy service.
   const selectedServices = SERVICE_GROUPS.map((group) =>
@@ -253,7 +268,11 @@ export default function BookTourForm({
   if (status === "sent" && sent) {
     return (
       <div
-        className="bg-white border-2 border-brass-400 p-8 md:p-12 rounded-sm text-center shadow-luxury max-w-xl mx-auto"
+        ref={successRef}
+        tabIndex={-1}
+        // scroll-mt clears the sticky header, which would otherwise cover the
+        // top of the panel once it is scrolled to.
+        className="bg-white border-2 border-brass-400 p-8 md:p-12 rounded-sm text-center shadow-luxury max-w-xl mx-auto scroll-mt-28 focus:outline-none"
         role="status"
         aria-live="polite"
       >
