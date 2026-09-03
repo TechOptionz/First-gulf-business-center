@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckCircle2, Calendar, Clock, Phone, Mail, MapPin, ShieldCheck, User, Building, Building2, Briefcase, Users2, ArrowRight, Loader2, Zap } from "lucide-react";
+import { CheckCircle2, Calendar, Clock, Phone, Mail, MapPin, ShieldCheck, User, Building, Building2, Briefcase, Users2, ArrowRight, Loader2, Zap, AlertCircle } from "lucide-react";
 import Button from "@/components/ui/Button";
 import MapLink from "@/components/ui/MapLink";
 import {
@@ -76,6 +76,39 @@ const BOOKING_ASSURANCES = [
   { icon: Zap, label: "Instant confirmation" },
 ];
 
+/** Must match the first <option> below, or the select shows one time and
+ *  state reports another. */
+const DEFAULT_TIME = "09:00 AM";
+const TEAM_SIZES = ["1 Person", "2-5 People", "6-12 People", "13-25 People", "25+ Enterprise"];
+const DEFAULT_TEAM_SIZE = TEAM_SIZES[0];
+
+const EMPTY_FORM = {
+  name: "",
+  email: "",
+  phone: "",
+  company: "",
+  date: "",
+  time: DEFAULT_TIME,
+  notes: "",
+  needEjari: false,
+  needBusinessSetup: false,
+};
+
+/** idle -> sending -> sent, or to error with the booking details still filled. */
+type Status = "idle" | "sending" | "sent" | "error";
+
+/** What the confirmation panel needs after the form itself has been cleared. */
+interface SentSummary {
+  name: string;
+  date: string;
+  time: string;
+  phone: string;
+  services: string[];
+}
+
+const GENERIC_ERROR =
+  "Sorry, we could not submit your booking just now. Please try again, or call us on +971 52 790 0335.";
+
 export default function BookTourForm({
   defaultWorkspace = "coworking",
   className,
@@ -83,23 +116,18 @@ export default function BookTourForm({
   // One choice per group, so a visitor can ask about a workspace and a
   // consultancy service in the same booking.
   const [services, setServices] = useState(() => initialServices(defaultWorkspace));
-  const [teamSize, setTeamSize] = useState("1-3");
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    date: "",
-    time: "10:00 AM",
-    notes: "",
-    needEjari: false,
-    needBusinessSetup: false,
-  });
+  const [teamSize, setTeamSize] = useState(DEFAULT_TEAM_SIZE);
+  const [formData, setFormData] = useState(EMPTY_FORM);
+  // Bots fill in every field they can parse, including the one people cannot see.
+  const [honeypot, setHoneypot] = useState("");
 
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
+  const [formError, setFormError] = useState("");
+  const [sent, setSent] = useState<SentSummary | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const sending = status === "sending";
 
   // Group order, so the workspace always reads before the consultancy service.
   const selectedServices = SERVICE_GROUPS.map((group) =>
@@ -150,8 +178,10 @@ export default function BookTourForm({
     return errs;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (sending) return;
+
     const errs = validate();
     if (selectedServices.length === 0) {
       errs.service = "Please select at least one workspace or service";
@@ -159,21 +189,74 @@ export default function BookTourForm({
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       setTouched({ name: true, email: true, phone: true, company: true, date: true });
+      setStatus("idle");
+      setFormError("");
       return;
     }
 
     setErrors({});
-    setLoading(true);
+    setFormError("");
+    setStatus("sending");
 
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-    }, 900);
+    const serviceLabels = selectedServices.map((option) => option.label);
+
+    try {
+      const response = await fetch("/api/book-tour", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          teamSize,
+          services: serviceLabels,
+          website: honeypot,
+        }),
+      });
+
+      // A non-JSON body (a proxy error page, say) must not throw past the
+      // catch and put a raw failure in front of the visitor.
+      const payload = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        // Field errors come from the server re-running the same validators.
+        if (payload && typeof payload.fields === "object" && payload.fields) {
+          setErrors(payload.fields as Record<string, string>);
+          setTouched({ name: true, email: true, phone: true, company: true, date: true });
+        }
+        setFormError(GENERIC_ERROR);
+        setStatus("error");
+        return;
+      }
+
+      // Snapshot first: the confirmation panel reads from this once the
+      // form behind it has been reset.
+      setSent({
+        name: formData.name,
+        date: formData.date,
+        time: formData.time,
+        phone: formData.phone,
+        services: serviceLabels,
+      });
+      setFormData(EMPTY_FORM);
+      setServices(initialServices(defaultWorkspace));
+      setTeamSize(DEFAULT_TEAM_SIZE);
+      setHoneypot("");
+      setTouched({});
+      setStatus("sent");
+    } catch {
+      // Network failure, offline, request blocked. The underlying error is
+      // never surfaced to the visitor.
+      setFormError(GENERIC_ERROR);
+      setStatus("error");
+    }
   };
 
-  if (submitted) {
+  if (status === "sent" && sent) {
     return (
-      <div className="bg-white border-2 border-brass-400 p-8 md:p-12 rounded-sm text-center shadow-luxury max-w-xl mx-auto">
+      <div
+        className="bg-white border-2 border-brass-400 p-8 md:p-12 rounded-sm text-center shadow-luxury max-w-xl mx-auto"
+        role="status"
+        aria-live="polite"
+      >
         <div className="w-16 h-16 bg-maroon-50 text-maroon-800 rounded-full flex items-center justify-center mx-auto mb-6 border border-maroon-200">
           <CheckCircle2 className="w-9 h-9" />
         </div>
@@ -181,8 +264,8 @@ export default function BookTourForm({
           Tour Booking Requested!
         </h3>
         <p className="text-base text-charcoal-800 mb-6 leading-relaxed">
-          Thank you, <strong className="text-maroon-900">{formData.name}</strong>. Our senior workspace concierge has received your request for{" "}
-          <strong className="text-maroon-900">{formData.date}</strong> at <strong className="text-maroon-900">{formData.time}</strong> at our Madina Mall center.
+          Thank you, <strong className="text-maroon-900">{sent.name}</strong>. Our senior workspace concierge has received your request for{" "}
+          <strong className="text-maroon-900">{sent.date}</strong> at <strong className="text-maroon-900">{sent.time}</strong> at our Madina Mall center.
         </p>
 
         <div className="bg-cream-100 p-5 rounded-sm border border-[#E2DAD0] text-left text-sm sm:text-base text-charcoal-900 mb-8 space-y-2.5">
@@ -194,22 +277,20 @@ export default function BookTourForm({
           </div>
           <div className="flex justify-between border-b border-cream-300 pb-2">
             <span className="text-charcoal-600 font-medium">
-              {selectedServices.length > 1 ? "Services:" : "Service:"}
+              {sent.services.length > 1 ? "Services:" : "Service:"}
             </span>
-            <span className="font-bold text-right">
-              {selectedServices.map((option) => option.label).join(" + ")}
-            </span>
+            <span className="font-bold text-right">{sent.services.join(" + ")}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-charcoal-600 font-medium">Contact:</span>
-            <span className="font-bold">{formData.phone}</span>
+            <span className="font-bold">{sent.phone}</span>
           </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button
             href={`https://wa.me/971527900335?text=Hello%20First%20Gulf%20Business%20Center%2C%20I%20just%20booked%20a%20tour%20under%20name%3A%20${encodeURIComponent(
-              formData.name
+              sent.name
             )}`}
             target="_blank"
             variant="gold"
@@ -221,21 +302,12 @@ export default function BookTourForm({
             variant="secondary"
             size="md"
             onClick={() => {
-              setSubmitted(false);
+              // The form was already reset on success; this just returns to it.
+              setStatus("idle");
+              setSent(null);
               setErrors({});
               setTouched({});
-              setServices(initialServices(defaultWorkspace));
-              setFormData({
-                name: "",
-                email: "",
-                phone: "",
-                company: "",
-                date: "",
-                time: "10:00 AM",
-                notes: "",
-                needEjari: false,
-                needBusinessSetup: false,
-              });
+              setFormError("");
             }}
           >
             Book Another Tour
@@ -260,11 +332,35 @@ export default function BookTourForm({
         </p>
       </div>
 
-      {/* Workspace / Service Selector */}
-      <div className="mb-8">
-        <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-1">
+      {/* Off-screen honeypot: hidden from people and from the tab order, but
+          not from the bots that fill in every input they can parse. */}
+      <div aria-hidden="true" className="absolute left-[-9999px] w-px h-px overflow-hidden">
+        <label htmlFor="tour-website">Website (leave this field blank)</label>
+        <input
+          id="tour-website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+        />
+      </div>
+
+      {/* Workspace / Service Selector. A group of buttons rather than inputs,
+          so it is labelled as a group instead of pointing at one control. */}
+      <div
+        className="mb-8"
+        role="group"
+        aria-labelledby="tour-service-label"
+        aria-describedby={errors.service ? "tour-service-error" : undefined}
+      >
+        <span
+          id="tour-service-label"
+          className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-1"
+        >
           Select Workspace or Service <span className="text-maroon-700">*</span>
-        </label>
+        </span>
         <p className="mb-3 text-sm text-charcoal-600">
           Pick one from each group if you need both - tap a selected card to clear it.
         </p>
@@ -310,22 +406,28 @@ export default function BookTourForm({
           })}
         </div>
         {errors.service && (
-          <p className="mt-2 text-sm text-red-600 font-semibold">{errors.service}</p>
+          <p id="tour-service-error" className="mt-2 text-sm text-red-600 font-semibold">
+            {errors.service}
+          </p>
         )}
       </div>
 
       {/* Team Size Selector */}
-      <div className="mb-8">
-        <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-3 flex items-center gap-2">
-          <Users2 className="w-4 h-4 text-brass-700" /> Team Size
-        </label>
+      <div className="mb-8" role="group" aria-labelledby="tour-team-label">
+        <span
+          id="tour-team-label"
+          className="text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-3 flex items-center gap-2"
+        >
+          <Users2 className="w-4 h-4 text-brass-700" aria-hidden="true" /> Team Size
+        </span>
         <div className="flex flex-wrap gap-2.5">
-          {["1 Person", "2-5 People", "6-12 People", "13-25 People", "25+ Enterprise"].map((size) => (
+          {TEAM_SIZES.map((size) => (
             <button
               key={size}
               type="button"
               onClick={() => setTeamSize(size)}
-              className={`px-4 py-2 text-sm font-bold rounded-sm border transition-colors cursor-pointer ${
+              aria-pressed={teamSize === size}
+              className={`min-h-[44px] px-4 py-2 text-sm font-bold rounded-sm border transition-colors cursor-pointer ${
                 teamSize === size
                   ? "bg-maroon-800 text-white border-maroon-800"
                   : "bg-cream-50 text-charcoal-900 border-cream-300 hover:border-brass-400"
@@ -341,12 +443,17 @@ export default function BookTourForm({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
         {/* Full Name */}
         <div>
-          <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2">
+          <label
+            htmlFor="tour-name"
+            className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2"
+          >
             Full Name <span className="text-maroon-700">*</span>
           </label>
           <div className="relative">
             <User className="w-5 h-5 text-charcoal-500 absolute left-3.5 top-3.5 pointer-events-none" />
             <input
+              id="tour-name"
+              name="name"
               type="text"
               required
               maxLength={60}
@@ -356,47 +463,68 @@ export default function BookTourForm({
               onChange={(e) => handleFieldChange("name", e.target.value)}
               onBlur={() => handleFieldBlur("name")}
               aria-invalid={!!errors.name}
+              aria-describedby={errors.name ? "tour-name-error" : undefined}
               className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                 errors.name ? "border-red-600" : "border-[#E2DAD0]"
               }`}
             />
           </div>
-          {errors.name && <p className="text-sm text-red-600 font-semibold mt-1.5">{errors.name}</p>}
+          {errors.name && (
+            <p id="tour-name-error" className="text-sm text-red-600 font-semibold mt-1.5">
+              {errors.name}
+            </p>
+          )}
         </div>
 
         {/* Email */}
         <div>
-          <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2">
+          <label
+            htmlFor="tour-email"
+            className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2"
+          >
             Business Email <span className="text-maroon-700">*</span>
           </label>
           <div className="relative">
             <Mail className="w-5 h-5 text-charcoal-500 absolute left-3.5 top-3.5 pointer-events-none" />
             <input
+              id="tour-email"
+              name="email"
               type="email"
               required
               maxLength={100}
               autoComplete="email"
+              inputMode="email"
               placeholder="tariq@company.ae"
               value={formData.email}
               onChange={(e) => handleFieldChange("email", e.target.value)}
               onBlur={() => handleFieldBlur("email")}
               aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? "tour-email-error" : undefined}
               className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                 errors.email ? "border-red-600" : "border-[#E2DAD0]"
               }`}
             />
           </div>
-          {errors.email && <p className="text-sm text-red-600 font-semibold mt-1.5">{errors.email}</p>}
+          {errors.email && (
+            <p id="tour-email-error" className="text-sm text-red-600 font-semibold mt-1.5">
+              {errors.email}
+            </p>
+          )}
         </div>
 
         {/* Phone */}
         <div>
-          <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2">
+          <label
+            htmlFor="tour-phone"
+            className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2"
+          >
             Phone / WhatsApp <span className="text-maroon-700">*</span>
           </label>
           <div className="relative">
             <Phone className="w-5 h-5 text-charcoal-500 absolute left-3.5 top-3.5 pointer-events-none" />
             <input
+              id="tour-phone"
+              name="phone"
               type="tel"
               required
               maxLength={20}
@@ -407,22 +535,32 @@ export default function BookTourForm({
               onChange={(e) => handleFieldChange("phone", e.target.value)}
               onBlur={() => handleFieldBlur("phone")}
               aria-invalid={!!errors.phone}
+              aria-describedby={errors.phone ? "tour-phone-error" : undefined}
               className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                 errors.phone ? "border-red-600" : "border-[#E2DAD0]"
               }`}
             />
           </div>
-          {errors.phone && <p className="text-sm text-red-600 font-semibold mt-1.5">{errors.phone}</p>}
+          {errors.phone && (
+            <p id="tour-phone-error" className="text-sm text-red-600 font-semibold mt-1.5">
+              {errors.phone}
+            </p>
+          )}
         </div>
 
         {/* Company Name */}
         <div>
-          <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2">
+          <label
+            htmlFor="tour-company"
+            className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2"
+          >
             Company Name
           </label>
           <div className="relative">
             <Building className="w-5 h-5 text-charcoal-500 absolute left-3.5 top-3.5 pointer-events-none" />
             <input
+              id="tour-company"
+              name="company"
               type="text"
               maxLength={80}
               autoComplete="organization"
@@ -431,22 +569,32 @@ export default function BookTourForm({
               onChange={(e) => handleFieldChange("company", e.target.value)}
               onBlur={() => handleFieldBlur("company")}
               aria-invalid={!!errors.company}
+              aria-describedby={errors.company ? "tour-company-error" : undefined}
               className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                 errors.company ? "border-red-600" : "border-[#E2DAD0]"
               }`}
             />
           </div>
-          {errors.company && <p className="text-sm text-red-600 font-semibold mt-1.5">{errors.company}</p>}
+          {errors.company && (
+            <p id="tour-company-error" className="text-sm text-red-600 font-semibold mt-1.5">
+              {errors.company}
+            </p>
+          )}
         </div>
 
         {/* Preferred Date */}
         <div>
-          <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2">
+          <label
+            htmlFor="tour-date"
+            className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2"
+          >
             Preferred Date <span className="text-maroon-700">*</span>
           </label>
           <div className="relative">
             <Calendar className="w-5 h-5 text-charcoal-500 absolute left-3.5 top-3.5 pointer-events-none" />
             <input
+              id="tour-date"
+              name="date"
               type="date"
               required
               value={formData.date}
@@ -454,22 +602,32 @@ export default function BookTourForm({
               onChange={(e) => handleFieldChange("date", e.target.value)}
               onBlur={() => handleFieldBlur("date")}
               aria-invalid={!!errors.date}
+              aria-describedby={errors.date ? "tour-date-error" : undefined}
               className={`w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all ${
                 errors.date ? "border-red-600" : "border-[#E2DAD0]"
               }`}
             />
           </div>
-          {errors.date && <p className="text-sm text-red-600 font-semibold mt-1.5">{errors.date}</p>}
+          {errors.date && (
+            <p id="tour-date-error" className="text-sm text-red-600 font-semibold mt-1.5">
+              {errors.date}
+            </p>
+          )}
         </div>
 
         {/* Preferred Time */}
         <div>
-          <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2">
+          <label
+            htmlFor="tour-time"
+            className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2"
+          >
             Preferred Time
           </label>
           <div className="relative">
             <Clock className="w-5 h-5 text-charcoal-500 absolute left-3.5 top-3.5 pointer-events-none" />
             <select
+              id="tour-time"
+              name="time"
               value={formData.time}
               onChange={(e) => setFormData({ ...formData, time: e.target.value })}
               className="w-full pl-11 pr-4 py-3 text-base text-charcoal-950 bg-cream-50/70 border border-[#E2DAD0] rounded-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:bg-white transition-all cursor-pointer font-medium"
@@ -509,11 +667,17 @@ export default function BookTourForm({
 
       {/* Notes / Special Requests */}
       <div className="mb-8">
-        <label className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2">
+        <label
+          htmlFor="tour-notes"
+          className="block text-sm sm:text-base font-bold uppercase tracking-wider text-charcoal-900 mb-2"
+        >
           Special Inquiries or Move-in Date
         </label>
         <textarea
+          id="tour-notes"
+          name="notes"
           rows={3}
+          maxLength={2000}
           placeholder="Tell us about any specific office configuration, parking needs, or corporate license requirements..."
           value={formData.notes}
           onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
@@ -521,16 +685,32 @@ export default function BookTourForm({
         />
       </div>
 
+      {/* Announces the in-flight state to a screen reader. The sent and error
+          states carry their own roles, so this only covers "sending". */}
+      <div aria-live="polite" role="status" className="sr-only">
+        {sending ? "Submitting your booking request" : ""}
+      </div>
+
+      {status === "error" && formError && (
+        <div
+          role="alert"
+          className="flex items-start gap-3 mb-5 p-4 bg-red-50 border border-red-300 rounded-sm"
+        >
+          <AlertCircle className="w-5 h-5 text-red-700 shrink-0 mt-0.5" aria-hidden="true" />
+          <p className="text-sm sm:text-base text-red-800 font-semibold">{formError}</p>
+        </div>
+      )}
+
       {/* Submit Button */}
       <Button
         type="submit"
         variant="primary"
         size="lg"
         fullWidth
-        disabled={loading}
-        icon={loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ArrowRight className="w-5 h-5" />}
+        disabled={sending}
+        icon={sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <ArrowRight className="w-5 h-5" />}
       >
-        {loading ? "Confirming Schedule..." : "Confirm & Book Workspace Tour"}
+        {sending ? "Confirming Schedule..." : "Confirm & Book Workspace Tour"}
       </Button>
 
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-y-3 gap-x-4 pt-5 border-t border-cream-200 text-xs sm:text-sm font-medium text-charcoal-700">
